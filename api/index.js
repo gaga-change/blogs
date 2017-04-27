@@ -2,9 +2,6 @@ var router = require('express').Router()
 let articleMenu = require('./db/articleMenu')
 let articleClass = require('./db/articleClass')
 
-// Add USERS Routes
-router.use(require('./users'))
-
 router.param('articleMenuId', articleMenu.load)
 router.param('articleClassId', articleClass.load)
 

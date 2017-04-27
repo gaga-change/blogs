@@ -10,7 +10,7 @@
             <!--<span class="icon-bar"></span>-->
             <!--<span class="icon-bar"></span>-->
           <!--</button>-->
-          <nuxt-link class="navbar-brand" to="/home">控制中心</nuxt-link>
+          <nuxt-link class="navbar-brand" to="/control">控制中心</nuxt-link>
         </div>
       </div>
     </nav>
@@ -21,9 +21,9 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <!--<li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>-->
-            <nuxt-link to="/home" tag="li" exact><a> 网站信息 </a></nuxt-link>
-            <nuxt-link to="/home/articlemenu" tag="li" exact><a> 文章类型 </a></nuxt-link>
-            <nuxt-link to="/home/articleclass" tag="li" exact><a> 文章类别 </a></nuxt-link>
+            <nuxt-link to="/control" tag="li" exact><a> 网站信息 </a></nuxt-link>
+            <nuxt-link to="/control/articlemenu" tag="li" exact><a> 文章类型 </a></nuxt-link>
+            <nuxt-link to="/control/articleclass" tag="li" exact><a> 文章类别 </a></nuxt-link>
             <!--<li><a href="#">Analytics</a></li>-->
             <!--<li><a href="#">Export</a></li>-->
           </ul>
