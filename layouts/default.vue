@@ -1,9 +1,7 @@
 <template>
   <div>
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!--<![endif]&ndash;&gt;-->
     <nuxt/>
     <my-footer/>
   </div>
@@ -11,46 +9,15 @@
 
 <script>
 import MyFooter from '~components/Footer.vue'
+import Header from '~components/Head.vue'
 
 export default {
   components: {
-    MyFooter
+    MyFooter,
+    'vue-head': Header
   }
 }
 </script>
-
-<style>
-.container
-{
-  margin: 0;
-  width: 100%;
-  padding: 100px 0;
-  text-align: center;
-}
-
-.button, .button:visited
-{
-  display: inline-block;
-  color: black;
-  letter-spacing: 1px;
-  background-color: #fff;
-  border: 2px solid #000;
-  text-decoration: none;
-  text-transform: uppercase;
-  padding: 15px 45px;
-}
-
-.button:hover, .button:focus
-{
-  color: #fff;
-  background-color: #000;
-}
-
-.title
-{
-  color: #000;
-  font-weight: 300;
-  font-size: 2.5em;
-  margin: 0;
-}
+<style lang="scss" rel="stylesheet/scss">
+  @import "../assets/css/_bootstrap.scss";
 </style>
