@@ -31,6 +31,9 @@
 <script>
   import NuxtLink from '../.nuxt/components/nuxt-link'
   export default {
+    asyncData ({params, error}) {
+//      return axios.get('/api/article/menu')
+    },
     components: {NuxtLink},
     head () {
       return {

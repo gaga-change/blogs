@@ -1,6 +1,7 @@
 const Nuxt = require('nuxt')
 const app = require('express')()
 const mongoose = require('mongoose')
+const passport = require('passport')
 
 var bodyParser = require('body-parser')
 const host = process.env.HOST || '127.0.0.1'
@@ -8,11 +9,9 @@ const port = process.env.PORT || 3000
 
 app.set('port', port)
 
-app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
-
-// Import API Routes
-app.use('/api', require('./api/index'))
+require('./api/passport')(passport)
+require('./api/express')(app, passport)
+require('./api/index')(app, passport)
 
 // Import and Set Nuxt.js options
 let config = require('./nuxt.config.js')
