@@ -1,94 +1,85 @@
-'use strict';
+'use strict'
 
 /**
  * 模块依赖
  */
 
-const mongoose = require('mongoose');
-const crypto = require('crypto');
+const mongoose = require('mongoose')
+const crypto = require('crypto')
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 const oAuthTypes = [
   // 'github',
-];
+]
 
 /**
  * User Schema
  */
 
 const UserSchema = new Schema({
-  name: { type: String, default: '' },
-  email: { type: String, default: '' },
-  username: { type: String, default: '' },
-  provider: { type: String, default: '' },
-  hashed_password: { type: String, default: '' },
-  salt: { type: String, default: '' },
-  authToken: { type: String, default: '' },
-  github: {},
-});
+  name: {type: String, default: ''},
+  email: {type: String, default: ''},
+  provider: {type: String, default: ''},
+  hashed_password: {type: String, default: ''},
+  salt: {type: String, default: ''},
+  github: {}
+})
 
 // 验证是否存在
-const validatePresenceOf = value => value && value.length;
+const validatePresenceOf = value => value && value.length
 
 /**
  * 虚拟属性 Virtuals   password
  */
 
 UserSchema
-.virtual('password')
-.set(function (password) {
-  this._password = password;
-  this.salt = this.makeSalt();
-  this.hashed_password = this.encryptPassword(password);
-})
-.get(function () {
-  return this._password;
-});
+  .virtual('password')
+  .set(function (password) {
+    this._password = password
+    this.salt = this.makeSalt()
+    this.hashed_password = this.encryptPassword(password)
+  })
+  .get(function () {
+    return this._password
+  })
 
 /**
  * Validations
  * 验证
  */
 // 5个基本验证
-//  - 全名验证 空
+//  - 用户名验证 空
 //  - 邮箱验证 空
 //  - 邮箱验证 已存在
-//  - 用户名 空
 //  - 密码hashed_password 空
 
 UserSchema.path('name').validate(function (name) {
-  if (this.skipValidation()) return true;
-  return name.length;
-}, 'Name cannot be blank');
+  if (this.skipValidation()) return true
+  return name.length
+}, 'Name cannot be blank')
 
 UserSchema.path('email').validate(function (email) {
-  if (this.skipValidation()) return true;
-  return email.length;
-}, 'Email cannot be blank');
+  if (this.skipValidation()) return true
+  return email.length
+}, 'Email cannot be blank')
 
 UserSchema.path('email').validate(function (email, fn) {
-  const User = mongoose.model('User');
-  if (this.skipValidation()) fn(true);
+  const User = mongoose.model('User')
+  if (this.skipValidation()) fn(true)
 
   // Check only when it is a new user or when email field is modified
   // 验证 邮箱修改或创建账号时 是否已经存在
   if (this.isNew || this.isModified('email')) {
-    User.find({ email: email }).exec(function (err, users) {
-      fn(!err && users.length === 0);
-    });
-  } else fn(true);
-}, 'Email already exists');
-
-UserSchema.path('username').validate(function (username) {
-  if (this.skipValidation()) return true;
-  return username.length;
-}, 'Username cannot be blank');
+    User.find({email: email}).exec(function (err, users) {
+      fn(!err && users.length === 0)
+    })
+  } else fn(true)
+}, 'Email already exists')
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-  if (this.skipValidation()) return true;
-  return hashed_password.length && this._password.length;
-}, 'Password cannot be blank');
-
+  if (this.skipValidation()) return true
+  return hashed_password.length && this._password.length
+}, 'Password cannot be blank')
 
 /**
  * Pre-save hook。 用户保存的钩子。 检测虚拟属性 password 是否为空
@@ -96,15 +87,15 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
 
 UserSchema.pre('save', function (next) {
 
-  if (!this.isNew) return next();
+  if (!this.isNew) return next()
   // 如果是新创建用户
   // 如果密码不存在 且不是 第三方。报错
   if (!validatePresenceOf(this.password) && !this.skipValidation()) {
-    next(new Error('Invalid password'));
+    next(new Error('Invalid password'))
   } else {
-    next();
+    next()
   }
-});
+})
 
 /**
  * Methods
@@ -121,7 +112,7 @@ UserSchema.methods = {
    */
 
   authenticate: function (plainText) {
-    return this.encryptPassword(plainText) === this.hashed_password;
+    return this.encryptPassword(plainText) === this.hashed_password
   },
 
   /**
@@ -132,7 +123,7 @@ UserSchema.methods = {
    */
 
   makeSalt: function () {
-    return Math.round((new Date().valueOf() * Math.random())) + '';
+    return Math.round((new Date().valueOf() * Math.random())) + ''
   },
 
   /**
@@ -144,14 +135,14 @@ UserSchema.methods = {
    */
 
   encryptPassword: function (password) {
-    if (!password) return '';
+    if (!password) return ''
     try {
       return crypto
-      .createHmac('sha1', this.salt)
-      .update(password)
-      .digest('hex');
+        .createHmac('sha1', this.salt)
+        .update(password)
+        .digest('hex')
     } catch (err) {
-      return '';
+      return ''
     }
   },
 
@@ -161,9 +152,9 @@ UserSchema.methods = {
    */
 
   skipValidation: function () {
-    return ~oAuthTypes.indexOf(this.provider);
+    return ~oAuthTypes.indexOf(this.provider)
   }
-};
+}
 
 /**
  * Statics
@@ -180,11 +171,11 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name username';
+    options.select = options.select || 'name email'
     return this.findOne(options.criteria)
-    .select(options.select)
-    .exec(cb);
+      .select(options.select)
+      .exec(cb)
   }
-};
+}
 
-mongoose.model('User', UserSchema);
+mongoose.model('User', UserSchema)

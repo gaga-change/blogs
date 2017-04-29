@@ -3,6 +3,7 @@ let articleClass = require('./db/articleClass')
 var router = require('express').Router()
 let users = require('./db/user')
 const auth = require('./middlewares/authorization')
+const only = require('only')
 
 // const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
 // const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
@@ -39,7 +40,7 @@ module.exports = function (app, passport) {
           return res.json({success: false})
         }
         users.session(req, res)
-        return res.json({success: true, msg: '登入成功'})
+        return res.json({success: true, msg: '登入成功', user: only(user, '_id email name username')})
       })
     })(req, res, next)
   })

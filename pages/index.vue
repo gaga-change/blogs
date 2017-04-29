@@ -1,20 +1,20 @@
 <template>
   <div>
-    <vue-head/>
+    <!--<vue-head/>-->
     <vue-banner></vue-banner>
     <vue-container></vue-container>
+    <!--<nuxt></nuxt>-->
   </div>
 </template>
 
 <script>
   import Banner from '~components/Home.Banner.vue'
   import Container from '~components/Home.Container.vue'
-  import Head from '~components/Head.vue'
   export default {
+    layout: 'blog',
     components: {
       'vue-banner': Banner,
-      'vue-container': Container,
-      'vue-head': Head
+      'vue-container': Container
     }
   }
 </script>

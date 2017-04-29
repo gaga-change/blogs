@@ -20,19 +20,19 @@ module.exports = new LocalStrategy({
     const options = {
       criteria: { email: email },
       select: 'name username email hashed_password salt'
-    };
+    }
     User.load(options, function (err, user) {
       console.log('根据邮箱获取账号')
-      if (err) return done(err);
+      if (err) return done(err)
       if (!user) {
         console.log('没有该用户')
-        return done(null, false, { message: 'Unknown user' });
+        return done(null, false, { message: 'Unknown user' })
       }
       if (!user.authenticate(password)) {
         console.log('密码错误')
-        return done(null, false, { message: 'Invalid password' });
+        return done(null, false, { message: 'Invalid password' })
       }
-      return done(null, user);
+      return done(null, user)
     });
   }
 );

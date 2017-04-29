@@ -9,12 +9,10 @@
 
 <script>
   import MyFooter from '~components/Footer.vue'
-  import Header from '~components/Head.vue'
 
   export default {
     components: {
-      MyFooter,
-      'vue-head': Header
+      MyFooter
     }
   }
 </script>

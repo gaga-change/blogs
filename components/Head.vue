@@ -30,6 +30,16 @@
             <li><a href="#">碎言碎语</a></li>
             <li><a href="#">学无止境</a></li>
             <li><a href="#">留言板</a></li>
+            <li class="" v-if="!user">
+              <nuxt-link to="/login" class="log">登入</nuxt-link>
+              |
+              <nuxt-link to="/signup" class="log">注册</nuxt-link>
+            </li>
+            <li class="" v-else>
+              <nuxt-link to="/user" class="log">{{user.name}}</nuxt-link>
+              |
+              <a href="javascript:void(0)" class="log" @click="logout">退出</a>
+            </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
@@ -38,9 +48,38 @@
 </template>
 <script>
   import NuxtLink from '../.nuxt/components/nuxt-link'
-  export default {components: {NuxtLink}}
+  import axios from '~plugins/axios'
+  export default {
+    name: 'BlogMenu',
+    components: {NuxtLink},
+    computed: {
+      user () {
+        return this.$store.state.user
+      }
+    },
+    methods: {
+      logout () {
+        axios.get('/api/logout').then(res => {
+          window.sessionStorage.removeItem('user')
+          this.$store.commit('SET_USER', null)
+        })
+      }
+    }
+  }
 </script>
 <style scoped>
+  .mean-right .log {
+    padding: 0px !important;
+    line-height: 80px;
+    font-size: 3px;
+    display: inline-block;
+  }
+
+  .mean-right .log:first-child {
+    /*background-color: red;*/
+
+  }
+
   .nuxt-link-active {
     color: #222 !important;
   }

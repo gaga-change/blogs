@@ -1,18 +1,18 @@
 <template>
   <div class="container">
-    <form class="form-signin" ref="formSignin">
-      <h2 class="form-signin-heading">登入</h2>
-      <label for="inputEmail01" class="sr-only">Email address</label>
-      <input type="text" name="email" id="inputEmail01" class="form-control" placeholder="Email address" required
+    <form class="form-signin" ref="formSignup">
+      <h2 class="form-signin-heading">注册</h2>
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="inputEmail" name="email" class="form-control"
+             placeholder="Email address" required
              autofocus>
-      <label for="inputPassword01" class="sr-only">Password</label>
-      <input type="password" name="password" id="inputPassword01" class="form-control" placeholder="Password" required>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit" @click="signin($event, $refs.formSignin)">登入
+      <label for="inputName" class="sr-only">Full Name</label>
+      <input type="text" id="inputName" name="name" class="form-control" placeholder="Full Name" required
+             autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password"
+             required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" @click="signup($event,$refs.formSignup)">注册
       </button>
     </form>
   </div> <!-- /container -->
@@ -23,21 +23,21 @@
   export default {
     layout: 'blog',
     methods: {
-      signin (event, form) {
+      signup (event, form) {
         event.preventDefault()
         let body = {
           email: form.email.value,
+          name: form.name.value,
           password: form.password.value
         }
-        axios.post('/api/users/session', body).then(res => {
+        axios.post('/api/users', body).then(res => {
           res = res.data
           if (res.success) {
-            console.log(res)
             this.$store.commit('SET_USER', res.user)
             sessionStorage.setItem('user', JSON.stringify(res.user))
             this.$router.replace({path: '/'})
           } else {
-            console.log(res)
+            alert(res.errors)
           }
         })
       }
@@ -87,4 +87,4 @@
     border-top-right-radius: 0;
   }
 
-</style> 
+</style>

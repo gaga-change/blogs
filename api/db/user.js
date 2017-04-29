@@ -29,7 +29,7 @@ exports.load = async(function* (req, res, next, _id) {
  */
 
 exports.create = async(function* (req, res) {
-  const user = new User(req.body)
+  const user = new User(only(req.body, 'name email password'))
   user.provider = 'local'
   try {
     yield user.save()
@@ -37,11 +37,11 @@ exports.create = async(function* (req, res) {
     req.logIn(user, err => {
       if (err) req.flash('info', 'Sorry! We are not able to log you in!')
       // return res.redirect('/');
-      res.json({success: true})
+      res.json({success: true, user: only(req.user, 'name email _id')})
     })
   } catch (err) {
     const errors = Object.keys(err.errors)
-    .map(field => err.errors[field].message)
+      .map(field => err.errors[field].message)
     res.json({success: false, errors})
   }
 })
