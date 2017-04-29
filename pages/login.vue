@@ -63,7 +63,7 @@
         })
       },
       getUser(){
-        axios.get('/api/user').then(res => {
+        axios.get('/api/users').then(res => {
           console.log(res.data)
         })
       },

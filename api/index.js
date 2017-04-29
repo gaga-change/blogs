@@ -4,6 +4,9 @@ var router = require('express').Router()
 let users = require('./db/user')
 const auth = require('./middlewares/authorization')
 
+// const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
+// const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
+
 module.exports = function (app, passport) {
   const pauth = passport.authenticate.bind(passport)
 
@@ -12,7 +15,7 @@ module.exports = function (app, passport) {
 
   // 账号
   router.get('/logout', users.logout) // 退出
-  router.get('/user', function (req, res, next) {
+  router.get('/users', function (req, res, next) {
     if (req.isAuthenticated()) {
       res.json({success: true, msg: '登入了', user: req.user})
     } else {
@@ -43,7 +46,7 @@ module.exports = function (app, passport) {
   router.get('/users/:userId', users.show)
 
 // 文章类型（分类管理）
-  router.post('/article/menu', articleMenu.create)
+  router.post('/article/menu', auth.requiresLogin , articleMenu.create)
   router.delete('/article/menu/:articleMenuId', articleMenu.destroy)
   router.put('/article/menu/:articleMenuId', articleMenu.update)
   router.get('/article/menu/:articleMenuId', articleMenu.show)

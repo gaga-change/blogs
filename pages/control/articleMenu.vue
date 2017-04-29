@@ -23,7 +23,7 @@
           <td v-text="new Date(item.updateDate).toLocaleString()"></td>
           <td>
             <button @click="goDel(item)">删除</button>
-            <button @click="modifyArticleMenu(item)">{{!item.modify? '修改':'提交'}}</button>
+            <button @click="modifyArticleMenu(item)">{{!item.modify ? '修改' : '提交'}}</button>
           </td>
         </tr>
         <tr>
@@ -92,6 +92,10 @@
       // 添加新类型
       addArticleMenus () {
         axios.post('/api/article/menu', {name: this.$refs.inputName.value}).then(res => {
+          if (res.data.goLogin) {
+            this.$router.push({path: '/login', query: {returnPath: this.$route.fullPath}})
+            return
+          }
           if (!res.data.success) {
             alert('改类型已存在！')
           } else {

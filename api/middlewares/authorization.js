@@ -1,13 +1,21 @@
 'use strict';
 
+/**
+ * 1. 需要登入 && 需要高级权限
+ * 2. 需要登入 && 需要权限（--- 优化）
+ *
+ */
+
+
 /*
- *  Generic require login routing middleware
+ *  需要登入才能操作
  */
 
 exports.requiresLogin = function (req, res, next) {
   if (req.isAuthenticated()) return next();
-  if (req.method == 'GET') req.session.returnTo = req.originalUrl;
-  res.redirect('/login');
+  req.flash('info', 'You are not authorized');
+  // res.redirect('/login');
+  res.json({success: false, goLogin: true})
 };
 
 /*
@@ -21,6 +29,11 @@ exports.user = {
       return res.redirect('/users/' + req.profile.id);
     }
     next();
+  },
+  hasRoot: function (req, res, next) {
+    if (req.user.permissions.permissions === 1) {
+
+    }
   }
 };
 

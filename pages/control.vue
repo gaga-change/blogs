@@ -29,10 +29,23 @@
 </template>
 
 <script>
+  import axios from '~plugins/axios'
   import NuxtLink from '../.nuxt/components/nuxt-link'
   export default {
+    middleware: 'authenticated',
+
     asyncData ({params, error}) {
-//      return axios.get('/api/article/menu')
+//      return axios.get('/api/users')
+//      .then((res) => {
+//        console.log(res.data)
+//        if(res.data.success === false) {
+//          error({ statusCode: 404, message: 'User not found' })
+//        } else {
+//          return {
+//
+//          }
+//        }
+//      })
     },
     components: {NuxtLink},
     head () {
