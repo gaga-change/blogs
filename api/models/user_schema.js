@@ -11,7 +11,10 @@ const Schema = mongoose.Schema
 const oAuthTypes = [
   // 'github',
 ]
-
+const PERMISSIONS = {
+  _MASTER: 1,
+  _COMMON: 2
+}
 /**
  * User Schema
  */
@@ -22,6 +25,7 @@ const UserSchema = new Schema({
   provider: {type: String, default: ''},
   hashed_password: {type: String, default: ''},
   salt: {type: String, default: ''},
+  permissions: {type: Number, default: PERMISSIONS._COMMON},
   github: {}
 })
 
@@ -41,6 +45,12 @@ UserSchema
   })
   .get(function () {
     return this._password
+  })
+
+UserSchema
+  .virtual('isMaster')
+  .get(function () {
+    return false
   })
 
 /**
@@ -171,7 +181,7 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name email'
+    options.select = options.select || 'name email _id isMaster'
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb)

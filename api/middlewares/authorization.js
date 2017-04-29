@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * 1. 需要登入 && 需要高级权限
@@ -12,11 +12,11 @@
  */
 
 exports.requiresLogin = function (req, res, next) {
-  if (req.isAuthenticated()) return next();
-  req.flash('info', 'You are not authorized');
+  if (req.isAuthenticated()) return next()
+  req.flash('info', 'You are not authorized')
   // res.redirect('/login');
   res.json({success: false, goLogin: true})
-};
+}
 
 /*
  *  User authorization routing middleware
@@ -25,17 +25,17 @@ exports.requiresLogin = function (req, res, next) {
 exports.user = {
   hasAuthorization: function (req, res, next) {
     if (req.profile.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/users/' + req.profile.id);
+      req.flash('info', 'You are not authorized')
+      return res.redirect('/users/' + req.profile.id)
     }
-    next();
+    next()
   },
   hasRoot: function (req, res, next) {
     if (req.user.permissions.permissions === 1) {
 
     }
   }
-};
+}
 
 /*
  *  Article authorization routing middleware
@@ -44,12 +44,12 @@ exports.user = {
 exports.article = {
   hasAuthorization: function (req, res, next) {
     if (req.article.user.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/articles/' + req.article.id);
+      req.flash('info', 'You are not authorized')
+      return res.redirect('/articles/' + req.article.id)
     }
-    next();
+    next()
   }
-};
+}
 
 /**
  * Comment authorization routing middleware
@@ -60,10 +60,10 @@ exports.comment = {
     // if the current user is comment owner or article owner
     // give them authority to delete
     if (req.user.id === req.comment.user.id || req.user.id === req.article.user.id) {
-      next();
+      next()
     } else {
-      req.flash('info', 'You are not authorized');
-      res.redirect('/articles/' + req.article.id);
+      req.flash('info', 'You are not authorized')
+      res.redirect('/articles/' + req.article.id)
     }
   }
-};
+}

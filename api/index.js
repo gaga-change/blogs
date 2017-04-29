@@ -23,8 +23,8 @@ module.exports = function (app, passport) {
       res.json({success: false, msg: '没登入'})
     }
   })
-  router.post('/users', users.create)
-  router.post('/users/session', function (req, res, next) {
+  router.post('/users', users.create) // 注册
+  router.post('/users/session', function (req, res, next) { // 登入
     passport.authenticate('local', function (err, user, info) {
       if (err) {
         console.log('第一层错误')
@@ -40,7 +40,7 @@ module.exports = function (app, passport) {
           return res.json({success: false})
         }
         users.session(req, res)
-        return res.json({success: true, msg: '登入成功', user: only(user, '_id email name username')})
+        return res.json({success: true, msg: '登入成功', user: only(user, '_id name email isMaster') })
       })
     })(req, res, next)
   })

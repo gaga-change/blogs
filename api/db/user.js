@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const {wrap: async} = require('co')
 const only = require('only')
 const User = mongoose.model('User')
-const assign = Object.assign
+// const assign = Object.assign
 
 /**
  * 根据 param中的ID，获取用户信息，并保存在req中
@@ -33,11 +33,9 @@ exports.create = async(function* (req, res) {
   user.provider = 'local'
   try {
     yield user.save()
-    console.log(req.logIn)
     req.logIn(user, err => {
       if (err) req.flash('info', 'Sorry! We are not able to log you in!')
-      // return res.redirect('/');
-      res.json({success: true, user: only(req.user, 'name email _id')})
+      res.json({success: true, user: only(req.user, 'name email _id isMaster')})
     })
   } catch (err) {
     const errors = Object.keys(err.errors)

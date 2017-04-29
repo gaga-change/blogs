@@ -32,8 +32,7 @@
   import axios from '~plugins/axios'
   import NuxtLink from '../.nuxt/components/nuxt-link'
   export default {
-    middleware: 'authenticated',
-
+//    middleware: 'authenticated',
     asyncData ({params, error}) {
 //      return axios.get('/api/users')
 //      .then((res) => {
