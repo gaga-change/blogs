@@ -1,8 +1,24 @@
 // import { getUserFromCookie, getUserFromLocalStorage } from '~/utils/auth'
-// import axios from '~plugins/axios'
+import axios from '~plugins/axios'
 const only = require('only')
-
+axios.interceptors.response.use(function (res) {
+  if (typeof window === 'object') {
+    if (res.data.goLogin) {
+      /**
+       * 非法操作（用户已经退出 或 权限不够）
+       * @type {string}
+       */
+      location.href = '/login'
+    } else {
+      return res
+    }
+  } else {
+    return res
+  }
+})
 export default function ({isServer, store, req, route, res}) {
+  // axios.interceptors.request.eject(myInterceptor)
+
   // console.log(req)
   // If nuxt generate, pass this middleware
   // if (isServer && !req) return

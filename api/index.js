@@ -5,24 +5,16 @@ let users = require('./db/user')
 const auth = require('./middlewares/authorization')
 const only = require('only')
 
-// const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
+// 判断是否登入 以及 是否有最高权限
+const authMaster = [auth.requiresLogin, auth.requireMaster]
 // const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 
 module.exports = function (app, passport) {
-  const pauth = passport.authenticate.bind(passport)
-
+  passport.authenticate.bind(passport)
   router.param('articleMenuId', articleMenu.load)
   router.param('articleClassId', articleClass.load)
-
   // 账号
   router.get('/logout', users.logout) // 退出
-  router.get('/users', function (req, res, next) {
-    if (req.isAuthenticated()) {
-      res.json({success: true, msg: '登入了', user: req.user})
-    } else {
-      res.json({success: false, msg: '没登入'})
-    }
-  })
   router.post('/users', users.create) // 注册
   router.post('/users/session', function (req, res, next) { // 登入
     passport.authenticate('local', function (err, user, info) {
@@ -44,19 +36,19 @@ module.exports = function (app, passport) {
       })
     })(req, res, next)
   })
-  router.get('/users/:userId', users.show)
+  router.get('/users/:userId', users.show) // 根据id获取账号信息
 
 // 文章类型（分类管理）
-  router.post('/article/menu', auth.requiresLogin , articleMenu.create)
-  router.delete('/article/menu/:articleMenuId', articleMenu.destroy)
-  router.put('/article/menu/:articleMenuId', articleMenu.update)
+  router.post('/article/menu', authMaster, articleMenu.create)
+  router.delete('/article/menu/:articleMenuId', authMaster, articleMenu.destroy)
+  router.put('/article/menu/:articleMenuId', authMaster, articleMenu.update)
   router.get('/article/menu/:articleMenuId', articleMenu.show)
   router.get('/article/menu', articleMenu.index)
 
 // 文章类别（细分）
-  router.post('/article/class/:articleMenuId', articleClass.create)
-  router.delete('/article/class/:articleClassId', articleClass.destroy)
-  router.put('/article/class/:articleMenuId/:articleClassId', articleClass.update)
+  router.post('/article/class/:articleMenuId', authMaster, articleClass.create)
+  router.delete('/article/class/:articleClassId', authMaster, articleClass.destroy)
+  router.put('/article/class/:articleMenuId/:articleClassId', authMaster, articleClass.update)
   router.get('/article/class/:articleClassId', articleClass.show)
   router.get('/article/class', articleClass.index)
   app.use('/api', router)

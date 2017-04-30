@@ -13,8 +13,10 @@
 
 exports.requiresLogin = function (req, res, next) {
   if (req.isAuthenticated()) return next()
-  req.flash('info', 'You are not authorized')
-  // res.redirect('/login');
+  res.json({success: false, goLogin: true})
+}
+exports.requireMaster = function (req, res, next) {
+  if (req.user.isMaster) return next()
   res.json({success: false, goLogin: true})
 }
 

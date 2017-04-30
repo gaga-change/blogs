@@ -69,7 +69,7 @@
       })
     },
     methods: {
-      //修改新类型
+      // 修改新类型
       modifyArticleMenu (item) {
         // 如果已近进入修改模式
         if (item.modify) {
@@ -77,6 +77,7 @@
           axios.put('/api/article/menu/' + item._id, {
             name: this.newName
           }).then(res => {
+            if (!res) return
             if (!res.data.success) {
               alert(this.newName + ' 类型名已存在！')
             } else {
@@ -92,10 +93,7 @@
       // 添加新类型
       addArticleMenus () {
         axios.post('/api/article/menu', {name: this.$refs.inputName.value}).then(res => {
-          if (res.data.goLogin) {
-            this.$router.push({path: '/login', query: {returnPath: this.$route.fullPath}})
-            return
-          }
+          if (!res) return
           if (!res.data.success) {
             alert('改类型已存在！')
           } else {
@@ -109,20 +107,21 @@
       },
       // 点击删除，显示提示框
       goDel (item) {
-        this.checkItem = item;
+        this.checkItem = item
         this.showModal = true
         this.modalContent = '文章类型名:  ' + item.name
       },
       // 提示框点击确认后，然后删除数据
       confirmDel () {
         axios.delete('/api/article/menu/' + this.checkItem._id).then(res => {
+          if (!res) return
           res = res.data
           if (res.success) {
             this.articleMenus = this.articleMenus.filter(v => {
               return v._id !== this.checkItem._id
             })
           } else {
-            alert("删除失败，请重试！")
+            alert('删除失败，请重试！')
           }
         })
       }
