@@ -20,7 +20,7 @@ module.exports = new LocalStrategy(
   function (email, password, done) {
     const options = {
       criteria: {email: email},
-      select: '_id name email hashed_password salt gaga'
+      select: '_id name email hashed_password salt permissions'
     }
     User.load(options, function (err, user) {
       console.log('根据邮箱获取账号')

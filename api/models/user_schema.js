@@ -50,7 +50,8 @@ UserSchema
 UserSchema
   .virtual('isMaster')
   .get(function () {
-    return false
+    console.log(this.permissions, this.permissions === PERMISSIONS._MASTER)
+    return (this.permissions === PERMISSIONS._MASTER ? true : null)
   })
 
 /**
@@ -181,7 +182,7 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name email _id isMaster'
+    options.select = options.select || 'name email _id isMaster permissions'
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb)
