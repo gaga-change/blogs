@@ -2,6 +2,7 @@ module.exports = {
   router: {
     middleware: 'check-auth'
   },
+  plugins: ['~plugins/vue-plugins'],
   /*
   ** Headers of the page
   */

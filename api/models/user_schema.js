@@ -69,12 +69,12 @@ UserSchema
 UserSchema.path('name').validate(function (name) {
   if (this.skipValidation()) return true
   return name.length
-}, 'Name cannot be blank')
+}, '用户名不能为空')
 
 UserSchema.path('email').validate(function (email) {
   if (this.skipValidation()) return true
   return email.length
-}, 'Email cannot be blank')
+}, '邮箱不能为空')
 
 UserSchema.path('email').validate(function (email, fn) {
   const User = mongoose.model('User')
@@ -87,12 +87,12 @@ UserSchema.path('email').validate(function (email, fn) {
       fn(!err && users.length === 0)
     })
   } else fn(true)
-}, 'Email already exists')
+}, '邮箱已存在')
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
   if (this.skipValidation()) return true
   return hashed_password.length && this._password.length
-}, 'Password cannot be blank')
+}, '密码不能为空')
 
 /**
  * Pre-save hook。 用户保存的钩子。 检测虚拟属性 password 是否为空

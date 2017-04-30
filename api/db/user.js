@@ -8,7 +8,10 @@ const {wrap: async} = require('co')
 const only = require('only')
 const User = mongoose.model('User')
 const assign = Object.assign
-
+const PERMISSIONS = {
+  _MASTER: 1,
+  _COMMON: 2
+}
 /**
  * 根据 param中的ID，获取用户信息，并保存在req中
  */
@@ -69,7 +72,7 @@ exports.add = async(function* (req, res) {
   user.provider = 'local'
   try {
     yield user.save()
-    res.json({success: true, msg: '添加成功'})
+    res.json({success: true, msg: '添加成功', user: only(user, 'name email _id permissions createDate updateDate')})
   } catch (err) {
     const errors = Object.keys(err.errors)
       .map(field => err.errors[field].message)
@@ -81,8 +84,13 @@ exports.add = async(function* (req, res) {
  * 删 删除用户，需传入id
  */
 exports.destroy = async(function* (req, res) {
-  yield req.profile.remove()
-  res.json({success: true})
+  if (req.profile.permissions === PERMISSIONS._MASTER) {
+    res.json({success: false, msg: '管理员用户不能删除'})
+  } else {
+    yield req.profile.remove()
+    res.json({success: true})
+  }
+
 })
 
 /**
@@ -133,6 +141,7 @@ exports.index = async(function* (req, res) {
       data: user,
       page: page + 1,
       pages: Math.ceil(count / limit),
+      count: count,
       success: true
     })
   } catch (err) {

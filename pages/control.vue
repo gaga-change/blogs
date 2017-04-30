@@ -17,6 +17,7 @@
             <nuxt-link to="/control" tag="li" exact><a> 网站信息 </a></nuxt-link>
             <nuxt-link to="/control/articlemenu" tag="li" exact><a> 文章类型 </a></nuxt-link>
             <nuxt-link to="/control/articleclass" tag="li" exact><a> 文章类别 </a></nuxt-link>
+            <nuxt-link to="/control/users" tag="li" exact><a> 网站用户 </a></nuxt-link>
           </ul>
         </div>
         <!--右侧内容-->

@@ -98,7 +98,7 @@
       })
     },
     methods: {
-      //修改新类型
+      // 修改新类型
       modifyArticleClass (item) {
         // 如果已近进入修改模式
         if (item.modify) {
