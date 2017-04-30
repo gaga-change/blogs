@@ -26,7 +26,9 @@ const UserSchema = new Schema({
   hashed_password: {type: String, default: ''},
   salt: {type: String, default: ''},
   permissions: {type: Number, default: PERMISSIONS._COMMON},
-  github: {}
+  createDate: {type: Date, default: Date.now},
+  updateDate: {type: Date, default: Date.now},
+  // github: {}
 })
 
 // 验证是否存在
@@ -186,6 +188,23 @@ UserSchema.statics = {
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb)
+  },
+  /**
+   * List articles
+   *
+   * @param {Object} options
+   * @api private
+   */
+  list: function (options) {
+    const criteria = options.criteria || {}
+    const page = options.page || 0
+    const limit = options.limit || 30
+    return this.find(criteria)
+      .sort({createdAt: -1})
+      .select(options.select)
+      .limit(limit)
+      .skip(limit * page)
+      .exec()
   }
 }
 

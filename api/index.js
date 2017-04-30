@@ -13,7 +13,9 @@ module.exports = function (app, passport) {
   passport.authenticate.bind(passport)
   router.param('articleMenuId', articleMenu.load)
   router.param('articleClassId', articleClass.load)
-  // 账号
+  router.param('userId', users.load)
+
+// 账号 退出-登入-注册
   router.get('/logout', users.logout) // 退出
   router.post('/users', users.create) // 注册
   router.post('/users/session', function (req, res, next) { // 登入
@@ -31,12 +33,15 @@ module.exports = function (app, passport) {
           console.log('logIn 错误')
           return res.json({success: false})
         }
-        users.session(req, res)
-        return res.json({success: true, msg: '登入成功', user: only(user, '_id name email isMaster') })
+        return res.json({success: true, msg: '登入成功', user: only(user, '_id name email isMaster')})
       })
     })(req, res, next)
-  })
-  router.get('/users/:userId', users.show) // 根据id获取账号信息
+  })  // 登入
+// 账号管理  增-删-改-查
+  router.post('/users/add', users.add) // 增
+  router.delete('/users/:userId', users.destroy) // 删除
+  router.put('/users/:userId', users.update)  // 改
+  router.get('/users', users.index) // 账号信息
 
 // 文章类型（分类管理）
   router.post('/article/menu', authMaster, articleMenu.create)
