@@ -15,5 +15,8 @@ export const getters = {
   },
   loggedUser (state) {
     return state.user
+  },
+  isMaster (state) {
+    return !!state.user && !!state.user.isMaster
   }
 }

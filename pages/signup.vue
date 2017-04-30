@@ -34,7 +34,7 @@
           res = res.data
           if (res.success) {
             this.$store.commit('SET_USER', res.user)
-            sessionStorage.setItem('user', JSON.stringify(res.user))
+            localStorage.setItem('user', JSON.stringify(res.user))
             this.$router.replace({path: '/'})
           } else {
             alert(res.errors)

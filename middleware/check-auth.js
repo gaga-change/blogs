@@ -17,7 +17,7 @@ export default function ({isServer, store, req, route, res}) {
     // this.router.push({path: '/login', query: {returnPath: this.router.fullPath}})
   }
   if (!isServer) {
-    store.commit('SET_USER', window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) : null)
+    store.commit('SET_USER', window.localStorage.user ? JSON.parse(window.localStorage.user) : null)
   }
   if (route.fullPath.split('/')[1] === 'control') {
     /**
