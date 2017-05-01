@@ -6,16 +6,17 @@
  *
  */
 
-
 /*
  *  需要登入才能操作
  */
 
 exports.requiresLogin = function (req, res, next) {
+  // return next()
   if (req.isAuthenticated()) return next()
   res.json({success: false, goLogin: true})
 }
 exports.requireMaster = function (req, res, next) {
+  // return next()
   if (req.user.isMaster) return next()
   res.json({success: false, goLogin: true})
 }

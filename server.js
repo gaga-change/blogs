@@ -2,13 +2,13 @@ const Nuxt = require('nuxt')
 const app = require('express')()
 const mongoose = require('mongoose')
 const passport = require('passport')
-
-var bodyParser = require('body-parser')
+const multer = require('multer')
+const upload = multer()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
 
 app.set('port', port)
-
+app.use(upload.single('image'))
 require('./api/passport')(passport)
 require('./api/express')(app, passport)
 require('./api/index')(app, passport)

@@ -1,12 +1,15 @@
-let articleMenu = require('./db/articleMenu')
-let articleClass = require('./db/articleClass')
-var router = require('express').Router()
-let users = require('./db/user')
-const auth = require('./middlewares/authorization')
+const router = require('express').Router()
 const only = require('only')
+const articleMenu = require('./db/articleMenu')
+const articleClass = require('./db/articleClass')
+const article = require('./db/articles')
+const users = require('./db/user')
+const comments = require('./db/comments')
+const auth = require('./middlewares/authorization')
 
 // 判断是否登入 以及 是否有最高权限
 const authMaster = [auth.requiresLogin, auth.requireMaster]
+// 判断是否登入、最高权限、当前用户和评论
 // const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 
 module.exports = function (app, passport) {
@@ -14,8 +17,21 @@ module.exports = function (app, passport) {
   router.param('articleMenuId', articleMenu.load)
   router.param('articleClassId', articleClass.load)
   router.param('userId', users.load)
+  router.param('articleId', article.load)
+  router.param('commentId', comments.load)
 
-// 账号 退出-登入-注册
+// 文章 增 删 改 查
+  router.post('/article', article.create)
+  router.delete('/article/:articleId', authMaster, article.destroy)
+  router.put('/article/:articleId', authMaster, article.update)
+  router.get('/article', article.index)
+
+// 评论 增 删 查
+//   router.post('/article/:articleId/comments', auth.requiresLogin, comments.create)
+//   router.delete('/article/:articleId/comments/:commentId', authMaster, comments.destroy)
+//   router.get('/article/:articleId/comments', auth.requiresLogin, comments.create)
+
+// 账号 退出-注册-登入
   router.get('/logout', users.logout) // 退出
   router.post('/users', users.create) // 注册
   router.post('/users/session', function (req, res, next) { // 登入
@@ -37,7 +53,8 @@ module.exports = function (app, passport) {
       })
     })(req, res, next)
   })  // 登入
-// 账号管理  增-删-改-查
+
+// 账号 增-删-改-查
   router.post('/users/add', users.add) // 增
   router.delete('/users/:userId', users.destroy) // 删除
   router.put('/users/:userId', users.update)  // 改
