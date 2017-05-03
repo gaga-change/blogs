@@ -21,9 +21,9 @@ module.exports = function (app, passport) {
   router.param('commentId', comments.load)
 
 // 文章 增 删 改 查
-  router.post('/article', article.create)
+  router.post('/article/:articleClassId/add', article.create)
   router.delete('/article/:articleId', authMaster, article.destroy)
-  router.put('/article/:articleId', authMaster, article.update)
+  router.put('/article/:articleId/:articleClassId/put', authMaster, article.update)
   router.get('/article', article.index)
 
 // 评论 增 删 查

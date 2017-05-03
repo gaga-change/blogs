@@ -34,10 +34,10 @@ exports.load = async(function* (req, res, next, id) {
  */
 
 exports.create = async(function* (req, res) {
-  const article = new Article(only(req.body, 'title body tags'))
-  article.user = req.user
+  const article = new Article(req.body)
+  article.articleClass = req.articleClass
   try {
-    yield article.uploadAndSave(req.file)
+    yield article.uploadAndSave()
     res.json({
       success: true,
       msg: 'Article 添加成功'
@@ -68,7 +68,9 @@ exports.destroy = async(function* (req, res) {
 
 exports.update = async(function* (req, res) {
   const article = req.article
-  assign(article, only(req.body, 'title body tags'))
+  assign(article, req.body)
+  article.articleClass = req.articleClass
+  article.updateDate = Date.now()
   try {
     yield article.uploadAndSave(req.file)
     res.json({success: true, msg: 'Article 文章修改成功'})
