@@ -30,12 +30,12 @@ exports.load = async(function* (req, res, next, id) {
 
 /**
  * 增 文章
- * 上传图片
  */
 
 exports.create = async(function* (req, res) {
   const article = new Article(req.body)
   article.articleClass = req.articleClass
+  article.articleMenu = req.articleClass.articleMenu
   try {
     yield article.uploadAndSave()
     res.json({
@@ -88,19 +88,28 @@ exports.update = async(function* (req, res) {
 exports.index = async(function* (req, res) {
   const page = (req.query.page > 0 ? req.query.page : 1) - 1
   const _id = req.query.item
+  const title = req.query.title
+  const articleClassId = req.query.articleClassId
+  const articleMenuId = req.query.articleMenuId
   const limit = 30
   const options = {
     limit: limit,
     page: page
   }
-  if (_id) options.criteria = {_id}
+  options.criteria = {}
+  if (_id) options.criteria._id = _id
+  if (title) options.criteria.title = new RegExp('(' + title + ')', 'i')
+  if (articleClassId) options.criteria.articleClass = articleClassId
+  if (articleMenuId) options.criteria.articleMenu = articleMenuId
+
   const articles = yield Article.list(options)
-  const count = yield Article.count()
+  const count = yield Article.count(options.criteria)
   res.json({
     title: 'Articles',
     success: true,
     articles: articles,
     page: page + 1,
+    count: count,
     pages: Math.ceil(count / limit)
   })
 })

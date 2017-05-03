@@ -34,7 +34,6 @@ connect()
 .on('disconnected', connect)
 .once('open', listen)
 function listen () {
-  // app.listen(port, host)
   app.listen(port)
   console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
 }

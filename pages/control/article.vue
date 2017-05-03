@@ -1,0 +1,199 @@
+<template>
+  <div>
+    <h2 class="sub-header">
+      文章列表
+      <button class="btn btn-info" type="button" @click="btnSearch">查询</button>
+    </h2>
+    <div>
+      邮箱：<input type="text" placeholder="邮箱" v-model="searchEmail">
+      用户名：<input type="text" placeholder="用户名" v-model="searchName">
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>index</th>
+          <th>标题</th>
+          <th>类型</th>
+          <th>类别</th>
+          <th>createDate</th>
+          <th>updateDate</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item,index) in articles">
+          <td v-text="index + 1"></td>
+          <td>
+            <span v-text="item.title"></span>
+          </td>
+          <td>
+            <span v-text="item.articleClass.name"></span>
+          </td>
+          <th>
+            <span>******</span>
+          </th>
+          <td> {{ item.createDate | prettyTime}}</td>
+          <td> {{ item.updateDate | prettyTime}}</td>
+          <td>
+            <a class="btn" @click="goDel(item)">删除</a>
+            <a class="btn" href="#">修改</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr>
+    <nav aria-label="Page navigation ">
+      <ul class="pagination">
+        <li><a> 总：<span v-text="count"></span>条</a></li>
+        <li v-if="page > 3 && pages > 5">
+          <a href="javescript:void(0)" @click="getUserList(1)">
+            <span><<</span>
+          </a>
+        </li>
+        <li v-if="page > 1">
+          <a href="javescript:void(0)" @click="getUserList(page - 1)">
+            <span><</span>
+          </a>
+        </li>
+        <li v-for="item in myPages" :class="{'active': item === page }">
+          <a href="javescript:void(0)" @click="getUserList(item)">{{item}}</a>
+        </li>
+        <li v-if="page < pages">
+          <a href="javescript:void(0)" @click="getUserList(page + 1)">
+            <span>></span>
+          </a>
+        </li>
+        <li v-if="page < pages - 2 && pages > 5">
+          <a href="javescript:void(0)" @click="getUserList(pages)">
+            <span>>></span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <modal
+      :ifShow="showModal"
+      title="确定要删除吗？"
+      :content="modalContent"
+      @close="showModal=false"
+      @confirm="confirmDel"
+    ></modal>
+  </div>
+</template>
+
+<script>
+  import axios from '~plugins/axios'
+  import Modal from '~components/Modal'
+  export default {
+    asyncData ({params, error}) {
+      return axios.get('/api/article', {
+        params: {
+          limit: 10,
+          page: 1
+        }
+      }).then((res) => {
+        return {
+          articles: res.data.articles,
+          showModal: false,
+          modalContent: '',
+          checkItem: null,
+          count: res.data.count,
+          limit: 10,
+          page: 1,
+          pages: res.data.pages,
+          searchName: '',
+          searchEmail: ''
+        }
+      }).catch((e) => {
+        error({statusCode: 404, message: 'Article not found'})
+      })
+    },
+    computed: {
+      myPages () {
+        if (this.pages < 5) {
+          let ret = []
+          for (let i = 1; i <= this.pages; i++) {
+            ret.push(i)
+          }
+          return ret
+        }
+        let middle = 3
+        if (this.page > 3) middle = this.page
+        if (this.page > this.pages - 2) middle = this.pages - 2
+        return [
+          // 1 2 3 4 5 6 7
+          (this.page < 3) ? 1 : (middle - 2),
+          (this.page < 3) ? 2 : (middle - 1),
+          (this.page < 3) ? 3 : middle,
+          (this.page > (this.pages - 2)) ? (this.pages - 1) : (middle + 1),
+          (this.page > (this.pages - 2)) ? this.pages : (middle + 2)
+        ]
+      }
+    },
+    methods: {
+      // 点击删除，显示提示框
+      goDel (item) {
+        this.checkItem = item
+        this.showModal = true
+        this.modalContent = '用户名:  ' + item.name + ' 邮箱:  ' + item.email
+      },
+      // 提示框点击确认后，然后删除数据
+      confirmDel () {
+        axios.delete('/api/users/' + this.checkItem._id).then(res => {
+          if (!res) return
+          res = res.data
+          if (res.success) {
+            this.users = this.users.filter(v => {
+              return v._id !== this.checkItem._id
+            })
+          } else {
+            alert('删除失败，请重试！')
+          }
+        })
+      },
+      // 点击 查询后，重新查询，并重新赋值
+      btnSearch () {
+        this.getUserList(this.page)
+      },
+      // 根据页码获取 列表
+      getUserList (page) {
+        axios.get('/api/article', {
+          params: {
+            limit: this.limit,
+            page: page,
+            email: this.searchEmail,
+            name: this.searchName
+          }
+        }).then(res => {
+          this.articles = res.data.articles
+          this.pages = res.data.pages
+          this.page = page
+          this.count = res.data.count
+        })
+      }
+    },
+    components: {
+      Modal
+    },
+    head () {
+      return {
+        title: `控制中心-文章类型`
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .pagination {
+    display: block;
+    text-align: center;
+  }
+
+  .pagination > li > a {
+    float: none;
+  }
+
+  .pagination > li {
+  }
+</style>

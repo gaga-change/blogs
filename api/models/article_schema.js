@@ -9,6 +9,7 @@ const ArticleSchema = new Schema({
   intro: {type: String, default: '', trim: true},
   author: {type: String, default: '', trim: true},
   articleClass: {type: Schema.ObjectId, ref: 'ArticleClass'},
+  articleMenu: {type: Schema.ObjectId, ref: 'ArticleMenu'},
   content: {type: String, default: '', trim: true},
   clickNum: {type: Number, default: 0},
   imageUrl: {type: String, default: ''},
@@ -74,9 +75,12 @@ ArticleSchema.statics = {
       .skip(limit * page)
       .exec()
     } else {
+      console.log(criteria)
       return this.find(criteria)
       .select('-content')
       .populate('articleClass', '_id name')
+      .populate('articleMenu', '_id name')
+      .find(criteria)
       .sort({createdAt: -1})
       .limit(limit)
       .skip(limit * page)
