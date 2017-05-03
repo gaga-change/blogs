@@ -70,7 +70,8 @@ module.exports = function (app, passport) {
 
   // CookieParser should be above session
   app.use(cookieParser())
-  app.use(cookieSession({secret: 'secret', maxAge: 10 * 24 * 60 * 60 * 1000}))
+  app.use(cookieSession({secret: 'secret', maxAge: 100 * 365 * 24 * 60 * 60 * 1000}))
+  // app.use(cookieSession({secret: 'secret'}))
   app.use(session({
     resave: false,
     saveUninitialized: true,

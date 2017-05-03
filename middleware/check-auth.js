@@ -17,11 +17,6 @@ axios.interceptors.response.use(function (res) {
   }
 })
 export default function ({isServer, store, req, route, res}) {
-  // axios.interceptors.request.eject(myInterceptor)
-
-  // console.log(req)
-  // If nuxt generate, pass this middleware
-  // if (isServer && !req) return
   /**
    * 如果是服务端，则在store中 保存用户信息。
    * 如果是客户端，则通过LS 拉取用户信息。（登入成功的时候会保留用户在本地）
@@ -29,11 +24,22 @@ export default function ({isServer, store, req, route, res}) {
   if (req && req.user) {
     // 服务端
     store.commit('SET_USER', only(req.user, '_id name email isMaster'))
-    // window.localStorage.setItem('user', JSON.stringify(req.user))
-    // this.router.push({path: '/login', query: {returnPath: this.router.fullPath}})
   }
   if (!isServer) {
-    store.commit('SET_USER', window.localStorage.user ? JSON.parse(window.localStorage.user) : null)
+    /**
+     * 判断是否为第一次 客户端切换
+     *   是: store.user 赋值给  ls.user
+     *   否： ls.user 赋值给 store.user
+     */
+    if (store.getters.isFirst) {
+      if (store.state.user) {
+        window.localStorage.setItem('user', JSON.stringify(store.state.user))
+      } else {
+        window.localStorage.removeItem('user')
+      }
+    } else {
+      store.commit('SET_USER', window.localStorage.user ? JSON.parse(window.localStorage.user) : null)
+    }
   }
   if (route.fullPath.split('/')[1] === 'control') {
     /**

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 // const notify = require('../mailer')
 
-const Imager = require('imager')
-const imagerConfig = require('../imager')
+// const Imager = require('imager')
+// const imagerConfig = require('../imager')
 
 const Schema = mongoose.Schema
 

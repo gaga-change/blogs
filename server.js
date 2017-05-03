@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const multer = require('multer')
 const upload = multer()
-const host = process.env.HOST || '127.0.0.1'
+const host = process.env.HOST || '192.168.40.85'
 const port = process.env.PORT || 3000
 
 app.set('port', port)
@@ -34,7 +34,8 @@ connect()
 .on('disconnected', connect)
 .once('open', listen)
 function listen () {
-  app.listen(port, host)
+  // app.listen(port, host)
+  app.listen(port)
   console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
 }
 // Listen the server
