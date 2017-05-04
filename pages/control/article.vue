@@ -5,8 +5,17 @@
       <button class="btn btn-info" type="button" @click="btnSearch">查询</button>
     </h2>
     <div>
-      邮箱：<input type="text" placeholder="邮箱" v-model="searchEmail">
-      用户名：<input type="text" placeholder="用户名" v-model="searchName">
+      标题：<input type="text" placeholder="标题" v-model="searchTitle">
+      类型：
+      <select name="" v-model="searchMenu">
+        <option :value="null" selected>全部</option>
+        <option v-for="item in articleMenus" :value="item._id" v-text="item.name"></option>
+      </select>
+      <span v-if="searchMenu">类别：</span>
+      <select name="" v-model="searchClass" v-if="searchMenu">
+        <option :value="null">全部</option>
+        <option v-for="item in articleClassesFilter" :value="item._id" v-text="item.name"></option>
+      </select>
     </div>
     <div class="table-responsive">
       <table class="table table-striped">
@@ -30,9 +39,9 @@
           <td>
             <span v-text="item.articleClass.name"></span>
           </td>
-          <th>
-            <span>******</span>
-          </th>
+          <td>
+            <span v-text="item.articleMenu.name"></span>
+          </td>
           <td> {{ item.createDate | prettyTime}}</td>
           <td> {{ item.updateDate | prettyTime}}</td>
           <td>
@@ -95,6 +104,8 @@
       }).then((res) => {
         return {
           articles: res.data.articles,
+          articleMenus: null,
+          articleClasses: null,
           showModal: false,
           modalContent: '',
           checkItem: null,
@@ -102,14 +113,25 @@
           limit: 10,
           page: 1,
           pages: res.data.pages,
-          searchName: '',
-          searchEmail: ''
+          searchTitle: '',
+          searchClass: null,
+          searchMenu: null
         }
       }).catch((e) => {
         error({statusCode: 404, message: 'Article not found'})
       })
     },
+    watch:{
+      searchMenu (value) {
+        if(value === null) this.searchClass = null
+      }
+    },
     computed: {
+      articleClassesFilter () {
+        return this.articleClasses.filter(v => {
+          return v.articleMenu._id === this.searchMenu
+        })
+      },
       myPages () {
         if (this.pages < 5) {
           let ret = []
@@ -131,20 +153,28 @@
         ]
       }
     },
+    created () {
+      axios.get('/api/article/class').then(res => {
+        this.articleClasses = res.data.data
+      })
+      axios.get('/api/article/menu').then(res => {
+        this.articleMenus = res.data.data
+      })
+    },
     methods: {
       // 点击删除，显示提示框
       goDel (item) {
         this.checkItem = item
         this.showModal = true
-        this.modalContent = '用户名:  ' + item.name + ' 邮箱:  ' + item.email
+        this.modalContent = 'title:  ' + item.title
       },
       // 提示框点击确认后，然后删除数据
       confirmDel () {
-        axios.delete('/api/users/' + this.checkItem._id).then(res => {
+        axios.delete('/api/article/' + this.checkItem._id).then(res => {
           if (!res) return
           res = res.data
           if (res.success) {
-            this.users = this.users.filter(v => {
+            this.articles = this.articles.filter(v => {
               return v._id !== this.checkItem._id
             })
           } else {
@@ -162,8 +192,9 @@
           params: {
             limit: this.limit,
             page: page,
-            email: this.searchEmail,
-            name: this.searchName
+            articleClassId: this.searchClass,
+            title: this.searchTitle === '' ? null : this.searchTitle,
+            articleMenuId: this.searchMenu
           }
         }).then(res => {
           this.articles = res.data.articles

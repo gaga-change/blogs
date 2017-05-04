@@ -44,7 +44,7 @@ exports.create = async(function* (req, res) {
     })
   } catch (err) {
     const errors = Object.keys(err.errors)
-      .map(field => err.errors[field].message)
+    .map(field => err.errors[field].message)
     res.json({
       success: false,
       msg: 'Article 服务器繁忙，添加失败',
@@ -76,7 +76,7 @@ exports.update = async(function* (req, res) {
     res.json({success: true, msg: 'Article 文章修改成功'})
   } catch (err) {
     const errors = Object.keys(err.errors)
-      .map(field => err.errors[field].message)
+    .map(field => err.errors[field].message)
     res.json({success: false, msg: 'Article 文章修改失败', errors, article})
   }
 })
@@ -91,7 +91,7 @@ exports.index = async(function* (req, res) {
   const title = req.query.title
   const articleClassId = req.query.articleClassId
   const articleMenuId = req.query.articleMenuId
-  const limit = 30
+  let limit = Number(req.query.limit)
   const options = {
     limit: limit,
     page: page
@@ -101,7 +101,6 @@ exports.index = async(function* (req, res) {
   if (title) options.criteria.title = new RegExp('(' + title + ')', 'i')
   if (articleClassId) options.criteria.articleClass = articleClassId
   if (articleMenuId) options.criteria.articleMenu = articleMenuId
-
   const articles = yield Article.list(options)
   const count = yield Article.count(options.criteria)
   res.json({

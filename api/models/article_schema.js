@@ -75,7 +75,6 @@ ArticleSchema.statics = {
       .skip(limit * page)
       .exec()
     } else {
-      console.log(criteria)
       return this.find(criteria)
       .select('-content')
       .populate('articleClass', '_id name')
