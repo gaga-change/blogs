@@ -4,8 +4,8 @@ const articleMenu = require('./db/articleMenu')
 const articleClass = require('./db/articleClass')
 const spoken = require('./db/spoken')
 const article = require('./db/articles')
+const comment = require('./db/comment')
 const users = require('./db/user')
-const comments = require('./db/comments')
 const auth = require('./middlewares/authorization')
 
 // 判断是否登入 以及 是否有最高权限
@@ -19,8 +19,14 @@ module.exports = function (app, passport) {
   router.param('articleClassId', articleClass.load)
   router.param('userId', users.load)
   router.param('articleId', article.load)
-  router.param('commentId', comments.load)
+  router.param('commentId', comment.load)
   router.param('spokenId', spoken.load)
+
+// 主评论 增 删 改 查
+  router.post('/comment/:articleId', comment.create)
+  router.delete('/comment/:commentId', comment.destroy)
+  router.put('/comment/:articleId/:commentId', comment.update)
+  router.get('/comment', comment.index)
 
 // 碎言碎语 增 删 改 查
   router.post('/spoken', spoken.create)
