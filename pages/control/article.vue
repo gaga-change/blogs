@@ -3,6 +3,10 @@
     <h2 class="sub-header">
       文章列表
       <button class="btn btn-info" type="button" @click="btnSearch">查询</button>
+      <nuxt-link class="btn btn-info"
+                 :to="{name:'control-articleDetail-articleID', params: {articleID: 'add'}}"
+      >添加
+      </nuxt-link>
     </h2>
     <div>
       标题：<input type="text" placeholder="标题" v-model="searchTitle">
@@ -46,7 +50,10 @@
           <td> {{ item.updateDate | prettyTime}}</td>
           <td>
             <a class="btn" @click="goDel(item)">删除</a>
-            <a class="btn" href="#">修改</a>
+            <nuxt-link class="btn"
+                       :to="{name:'control-articleDetail-articleID', params: {articleID: item._id}}"
+            >修改
+            </nuxt-link>
           </td>
         </tr>
         </tbody>
@@ -94,6 +101,7 @@
 <script>
   import axios from '~plugins/axios'
   import Modal from '~components/Modal'
+  import NuxtLink from '../../.nuxt/components/nuxt-link'
   export default {
     asyncData ({params, error}) {
       return axios.get('/api/article', {
@@ -121,9 +129,9 @@
         error({statusCode: 404, message: 'Article not found'})
       })
     },
-    watch:{
+    watch: {
       searchMenu (value) {
-        if(value === null) this.searchClass = null
+        if (value === null) this.searchClass = null
       }
     },
     computed: {
@@ -205,11 +213,12 @@
       }
     },
     components: {
+      NuxtLink,
       Modal
     },
     head () {
       return {
-        title: `控制中心-文章类型`
+        title: `控制中心-文章列表`
       }
     }
   }
