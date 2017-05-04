@@ -47,7 +47,7 @@ exports.create = async(function* (req, res) {
     .map(field => err.errors[field].message)
     res.json({
       success: false,
-      msg: '添加失败',
+      msg: 'Comment 服务器繁忙，添加失败',
       errors
     })
   }
@@ -86,20 +86,16 @@ exports.update = async(function* (req, res) {
 
 exports.index = async(function* (req, res) {
   const page = (req.query.page > 0 ? req.query.page : 1) - 1
-  const pageson = (req.query.pageson > 0 ? req.query.pageson : 1) - 1
   const _id = req.query.item
+  const articleId = req.query.articleId
   let limit = Number(req.query.limit) || 30
-  let limitson = Number(req.query.limitson) || 30
   const options = {
     limit: limit,
     page: page
   }
-  const options_son = {
-    limit: limitson,
-    page: pageson
-  }
   options.criteria = {}
   if (_id) options.criteria._id = _id
+  if (articleId) options.criteria.article = articleId
   const comments = yield Comment.list(options)
   const count = yield Comment.count(options.criteria)
   res.json({

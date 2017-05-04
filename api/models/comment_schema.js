@@ -12,9 +12,11 @@ const CommentSchema = new Schema({
   comments: [{
     body: { type : String, default : '' },
     user: { type : Schema.ObjectId, ref : 'User' },
-    createdAt: { type : Date, default : Date.now }
+    createDate: { type : Date, default : Date.now },
+    updateDate: { type : Date, default : Date.now }
   }],
-  createdAt  : { type : Date, default : Date.now }
+  createDate  : { type : Date, default : Date.now },
+  updateDate: { type : Date, default : Date.now }
 });
 
 /**
@@ -56,9 +58,8 @@ CommentSchema.methods = {
     const index = this.comments
     .map(comment => comment.id)
     .indexOf(commentId);
-
     if (~index) this.comments.splice(index, 1);
-    else throw new Error('评论没有找到');
+    // else throw new Error('评论没有找到');
     return this.save();
   }
 };
@@ -90,12 +91,13 @@ CommentSchema.statics = {
    * @api private
    */
 
-  list: function (options) {
+  list: function (options, options_son) {
     const criteria = options.criteria || {};
     const page = options.page || 0;
     const limit = options.limit || 30;
     return this.find(criteria)
     .populate('user', 'name email _id isMaster')
+    .populate('comments.user', 'name email _id isMaster')
     .sort({ createdAt: -1 })
     .limit(limit)
     .skip(limit * page)

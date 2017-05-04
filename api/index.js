@@ -5,6 +5,7 @@ const articleClass = require('./db/articleClass')
 const spoken = require('./db/spoken')
 const article = require('./db/articles')
 const comment = require('./db/comment')
+const commentSon = require('./db/comment.son')
 const users = require('./db/user')
 const auth = require('./middlewares/authorization')
 
@@ -21,12 +22,18 @@ module.exports = function (app, passport) {
   router.param('articleId', article.load)
   router.param('commentId', comment.load)
   router.param('spokenId', spoken.load)
+  router.param('commentSonId', commentSon.load)
 
 // 主评论 增 删 改 查
   router.post('/comment/:articleId', comment.create)
   router.delete('/comment/:commentId', comment.destroy)
   router.put('/comment/:articleId/:commentId', comment.update)
   router.get('/comment', comment.index)
+
+// 次评论 增 删 改 查
+  router.post('/son/comment/:commentId', commentSon.create)
+  router.delete('/son/comment/:commentId/:commentSonId', commentSon.destroy)
+  router.put('/son/comment/:commentId/:commentSonId', commentSon.update)
 
 // 碎言碎语 增 删 改 查
   router.post('/spoken', spoken.create)
