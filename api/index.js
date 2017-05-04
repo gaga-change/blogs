@@ -2,6 +2,7 @@ const router = require('express').Router()
 const only = require('only')
 const articleMenu = require('./db/articleMenu')
 const articleClass = require('./db/articleClass')
+const spoken = require('./db/spoken')
 const article = require('./db/articles')
 const users = require('./db/user')
 const comments = require('./db/comments')
@@ -19,6 +20,13 @@ module.exports = function (app, passport) {
   router.param('userId', users.load)
   router.param('articleId', article.load)
   router.param('commentId', comments.load)
+  router.param('spokenId', spoken.load)
+
+// 碎言碎语 增 删 改 查
+  router.post('/spoken', spoken.create)
+  router.delete('/spoken/:spokenId', authMaster, spoken.destroy)
+  router.put('/spoken/:spokenId', authMaster, spoken.update)
+  router.get('/spoken', spoken.index)
 
 // 文章 增 删 改 查
   router.post('/article/:articleClassId/add', article.create)

@@ -52,7 +52,6 @@ UserSchema
 UserSchema
   .virtual('isMaster')
   .get(function () {
-    console.log(this.permissions, this.permissions === PERMISSIONS._MASTER)
     return (this.permissions === PERMISSIONS._MASTER ? true : null)
   })
 

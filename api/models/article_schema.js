@@ -79,7 +79,6 @@ ArticleSchema.statics = {
       .select('-content')
       .populate('articleClass', '_id name')
       .populate('articleMenu', '_id name')
-      .find(criteria)
       .sort({createdAt: -1})
       .limit(limit)
       .skip(limit * page)

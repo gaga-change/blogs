@@ -19,6 +19,7 @@
             <nuxt-link to="/control/articleclass" tag="li" exact><a> 文章类别 </a></nuxt-link>
             <nuxt-link to="/control/article" tag="li" exact><a> 文章列表 </a></nuxt-link>
             <nuxt-link to="/control/users" tag="li" exact><a> 网站用户 </a></nuxt-link>
+            <nuxt-link to="/control/spoken" tag="li" exact><a> 碎言碎语 </a></nuxt-link>
           </ul>
         </div>
         <!--右侧内容-->
