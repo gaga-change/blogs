@@ -2,7 +2,8 @@
   <div>
     <!--<vue-head/>-->
     <vue-banner></vue-banner>
-    <vue-container></vue-container>
+    <!--<vue-container></vue-container>-->
+    主页内容区
     <!--<nuxt></nuxt>-->
   </div>
 </template>
@@ -19,6 +20,6 @@
   }
 </script>
 
-<style>
+<style >
 
 </style>
