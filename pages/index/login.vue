@@ -1,17 +1,12 @@
 <template>
-  <div class="container">
+  <div>
     <form class="form-signin" ref="formSignin">
       <h2 class="form-signin-heading">登入</h2>
       <label for="inputEmail01" class="sr-only">Email address</label>
-      <input type="text" name="email" id="inputEmail01" class="form-control" placeholder="Email address" required
+      <input type="text" name="email" id="inputEmail01" class="form-control" placeholder="邮箱" required
              autofocus>
       <label for="inputPassword01" class="sr-only">Password</label>
-      <input type="password" name="password" id="inputPassword01" class="form-control" placeholder="Password" required>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
+      <input type="password" name="password" id="inputPassword01" class="form-control" placeholder="密码" required>
       <button class="btn btn-lg btn-primary btn-block" type="submit" @click="signin($event, $refs.formSignin)">登入
       </button>
     </form>
@@ -22,6 +17,9 @@
   import axios from '~plugins/axios'
   export default {
     layout: 'blog',
+    created() {
+      this.$store.commit('SET_MENU_NAME', '登入')
+    },
     methods: {
       signin (event, form) {
         event.preventDefault()

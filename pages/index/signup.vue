@@ -1,16 +1,16 @@
 <template>
-  <div class="container">
+  <div>
     <form class="form-signin" ref="formSignup">
       <h2 class="form-signin-heading">注册</h2>
       <label for="inputEmail" class="sr-only">Email address</label>
       <input type="email" id="inputEmail" name="email" class="form-control"
-             placeholder="Email address" required
+             placeholder="邮箱" required
              autofocus>
       <label for="inputName" class="sr-only">Full Name</label>
-      <input type="text" id="inputName" name="name" class="form-control" placeholder="Full Name" required
+      <input type="text" id="inputName" name="name" class="form-control" placeholder="用户名" required
              autofocus>
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password"
+      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码"
              required>
       <button class="btn btn-lg btn-primary btn-block" type="submit" @click="signup($event,$refs.formSignup)">注册
       </button>
@@ -22,6 +22,9 @@
   import axios from '~plugins/axios'
   export default {
     layout: 'blog',
+    created() {
+      this.$store.commit('SET_MENU_NAME', '注册')
+    },
     methods: {
       signup (event, form) {
         event.preventDefault()

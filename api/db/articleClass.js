@@ -81,6 +81,7 @@ exports.show = function (req, res) {
 exports.index = async(function* (req, res) {
   const page = (Number(req.query.page) > 0 ? Number(req.query.page) : 1) - 1
   const _id = req.query.item
+  const articleMenuId = req.query.articleMenuId
   const limit = Number(req.query.limit)
   // 如果没有limit，直接返回全部列表
   try {
@@ -95,7 +96,9 @@ exports.index = async(function* (req, res) {
         limit: limit,
         page: page
       }
-      if (_id) options.criteria = {_id}
+      options.criteria = {}
+      if (_id) options.criteria._id = _id
+      if (articleMenuId) options.criteria.articleMenu = articleMenuId
       const articleClass = yield ArticleClass.list(options)
       const count = yield ArticleClass.count()
       res.json({

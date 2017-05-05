@@ -27,10 +27,10 @@
               <nuxt-link to="/" exact>首页</nuxt-link>
             </li>
             <li>
-              <nuxt-link :to="{name:'index-spoken'}">碎言碎语</nuxt-link>
+              <nuxt-link :to="{name:'index-spoken'}" >碎言碎语</nuxt-link>
             </li>
             <li v-for="item in menus">
-              <nuxt-link :to="{name: 'index-menu', params: {menu: item._id} }" v-text="item.name" exact></nuxt-link>
+              <nuxt-link :to="{name: 'index-menu', params: {menu: item._id}, query: {name: item.name} }" v-text="item.name" exact></nuxt-link>
             </li>
             <!--<li><a href="#">留言板</a></li>-->
             <li v-if="user && user.isMaster"><nuxt-link to="/control/home">控制中心</nuxt-link></li>
@@ -40,7 +40,7 @@
               <nuxt-link :to="{name: 'index-signup'}" class="log">注册</nuxt-link>
             </li>
             <li class="" v-else>
-              <nuxt-link to="/user" class="log">{{user.name}}</nuxt-link>
+              <nuxt-link :to="{name: 'index-user'}" class="log">{{user.name}}</nuxt-link>
               |
               <a href="javascript:void(0)" class="log" @click="logout">退出</a>
             </li>

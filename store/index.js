@@ -1,6 +1,7 @@
 export const state = {
   user: null,
-  firstLoad: true
+  firstLoad: true,
+  menuName: ''
 }
 
 export const mutations = {
@@ -10,6 +11,9 @@ export const mutations = {
   },
   ACTIVE (state) {
     state.firstLoad = false
+  },
+  SET_MENU_NAME (state, name) {
+    state.menuName = name
   }
 }
 

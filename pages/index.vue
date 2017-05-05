@@ -4,11 +4,16 @@
     <vue-banner :show="bannerShow"></vue-banner>
     <!--<vue-container></vue-container>-->
     <div class="container">
-      <header class="row">
+      <header class="row" v-if="bannerShow">
         <h4 class="pull-left">
           文章<span class="text-primary">推荐</span>
         </h4>
       </header>
+      <h4 class="t_nav" v-if="!bannerShow">
+        <!--<span>“慢生活”不是懒惰，放慢速度不是拖延时间，而是让我们在生活中寻找到平衡。</span>-->
+        <nuxt-link to="/" class="n1">网站首页</nuxt-link>
+        <a href="javascript:void(0)" class="n2">{{menuName}}</a>
+      </h4>
       <div class="row">
         <!--左侧 文章推荐-->
         <section class="col-md-9 left-list">
@@ -39,10 +44,16 @@
   import axios from '~plugins/axios'
   import Banner from '~components/Home.Banner.vue'
   import Container from '~components/Home.Container.vue'
+  import NuxtLink from '../.nuxt/components/nuxt-link'
   export default {
     data () {
       return {
-        bannerShow: this.$route.name === 'index'
+        bannerShow: this.$route.name === 'index',
+      }
+    },
+    computed: {
+      menuName() {
+        return this.$store.state.menuName
       }
     },
     asyncData ({params, error}) {
@@ -72,6 +83,7 @@
       })
     },
     components: {
+      NuxtLink,
       'vue-banner': Banner,
       'vue-container': Container
     }
@@ -79,6 +91,35 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+  .t_nav {
+    border-bottom: #F1F1F1 1px solid;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 40px;
+    height: 40px;
+    span {
+      float: right;
+      color: #999;
+    }
+    a {
+      width: 100px;
+      display: block;
+      text-align: center;
+      color: #fff;
+      float: left;
+    }
+    a:hover {
+      text-decoration: none;
+      color: #333;
+    }
+    .n1 {
+      background: #5EA51B;
+    }
+    .n2 {
+      background: #8BBF5D;
+    }
+  }
+
   /*所有内容*/
   .container {
     margin-top: 20px;
@@ -96,6 +137,7 @@
 
     }
   }
+
   /*最新文章列表*/
   .new-article {
     padding: 0;
@@ -116,6 +158,7 @@
       color: #222;
     }
   }
+
   /*点击排行*/
   .hot-article {
     background: url(/images/ph.jpg) no-repeat left 8px;
@@ -139,9 +182,10 @@
       color: #222;
     }
   }
+
   .right-list h4 {
     /*font-size: 14px;*/
-    &> span {
+    & > span {
       padding-right: 6px;
       background-color: #fff;
     }
