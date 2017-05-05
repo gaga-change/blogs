@@ -1,11 +1,13 @@
 <template>
-  <div class="banner">
+  <div class="banner" v-if="show">
     <!--<img src="/public/banner.jpg" alt="banner">-->
   </div>
 </template>
 
 <script>
-  export default {}
+  export default {
+    props: ['show']
+  }
 </script>
 
 <style scoped>

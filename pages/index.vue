@@ -1,7 +1,7 @@
 <template>
   <div>
     <vue-head :menus="menus"/>
-    <vue-banner></vue-banner>
+    <vue-banner :show="bannerShow"></vue-banner>
     <!--<vue-container></vue-container>-->
     结构区
     <nuxt></nuxt>
@@ -13,6 +13,11 @@
   import Banner from '~components/Home.Banner.vue'
   import Container from '~components/Home.Container.vue'
   export default {
+    data () {
+      return {
+        bannerShow: this.$route.name === 'index'
+      }
+    },
     asyncData ({params, error}) {
       return axios.get('/api/article/menu')
       .then((res) => {
