@@ -14,7 +14,8 @@ const ArticleSchema = new Schema({
   clickNum: {type: Number, default: 0},
   imageUrl: {type: String, default: ''},
   createDate: {type: Date, default: Date.now},
-  updateDate: {type: Date, default: Date.now}
+  updateDate: {type: Date, default: Date.now},
+  push: {type: Boolean, default: false},
 })
 
 /**
@@ -51,9 +52,9 @@ ArticleSchema.statics = {
 
   load: function (_id) {
     return this.findOne({_id})
-      .populate('articleClass', '_id name')
-      // .populate('comments.user')
-      .exec()
+    .populate('articleClass', '_id name')
+    // .populate('comments.user')
+    .exec()
   },
 
   /**
@@ -79,7 +80,7 @@ ArticleSchema.statics = {
       .select('-content')
       .populate('articleClass', '_id name')
       .populate('articleMenu', '_id name')
-      .sort({createdAt: -1})
+      .sort(options.sort)
       .limit(limit)
       .skip(limit * page)
       .exec()

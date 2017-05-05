@@ -20,6 +20,18 @@
         <option :value="null">全部</option>
         <option v-for="item in articleClassesFilter" :value="item._id" v-text="item.name"></option>
       </select>
+      推荐：
+      <select v-model="searchPush">
+        <option :value="null">全部</option>
+        <option :value="true">推荐的</option>
+        <option :value="false">不推荐的</option>
+      </select>
+      点击量排序：
+      <select v-model="searchHot">
+        <option :value="null">全部</option>
+        <option :value="-1">从大到小</option>
+        <option :value="1">从小到大</option>
+      </select>
     </div>
     <div class="table-responsive">
       <table class="table table-striped">
@@ -29,8 +41,10 @@
           <th>标题</th>
           <th>类型</th>
           <th>类别</th>
-          <th>createDate</th>
-          <th>updateDate</th>
+          <th>推荐</th>
+          <th>点击量</th>
+          <th>创建时间</th>
+          <th>更新时间</th>
           <th>操作</th>
         </tr>
         </thead>
@@ -46,6 +60,12 @@
           <td>
             <span v-text="item.articleMenu.name"></span>
           </td>
+          <td>
+            <span v-text="item.push"></span>
+          </td>
+          <td>
+            <span v-text="item.clickNum"></span>
+          </td>
           <td> {{ item.createDate | prettyTime}}</td>
           <td> {{ item.updateDate | prettyTime}}</td>
           <td>
@@ -54,6 +74,8 @@
                        :to="{name:'control-articleDetail-articleID', params: {articleID: item._id}}"
             >修改
             </nuxt-link>
+            <a v-if="!item.push" v class="btn" @click="goPush(item, true)">推荐</a>
+            <a v-if="item.push" v class="btn" @click="goPush(item, false)">不推荐</a>
           </td>
         </tr>
         </tbody>
@@ -69,20 +91,20 @@
           </a>
         </li>
         <li v-if="page > 1">
-          <a href="javescript:void(0)" @click="getUserList(page - 1)">
+          <a href="javascript:void(0)" @click="getUserList(page - 1)">
             <span><</span>
           </a>
         </li>
         <li v-for="item in myPages" :class="{'active': item === page }">
-          <a href="javescript:void(0)" @click="getUserList(item)">{{item}}</a>
+          <a href="javascript:void(0)" @click="getUserList(item)">{{item}}</a>
         </li>
         <li v-if="page < pages">
-          <a href="javescript:void(0)" @click="getUserList(page + 1)">
+          <a href="javascript:void(0)" @click="getUserList(page + 1)">
             <span>></span>
           </a>
         </li>
         <li v-if="page < pages - 2 && pages > 5">
-          <a href="javescript:void(0)" @click="getUserList(pages)">
+          <a href="javascript:void(0)" @click="getUserList(pages)">
             <span>>></span>
           </a>
         </li>
@@ -123,7 +145,9 @@
           pages: res.data.pages,
           searchTitle: '',
           searchClass: null,
-          searchMenu: null
+          searchMenu: null,
+          searchPush: null,
+          searchHot: null
         }
       }).catch((e) => {
         error({statusCode: 404, message: 'Article not found'})
@@ -202,13 +226,30 @@
             page: page,
             articleClassId: this.searchClass,
             title: this.searchTitle === '' ? null : this.searchTitle,
-            articleMenuId: this.searchMenu
+            articleMenuId: this.searchMenu,
+            push: this.searchPush,
+            hot: this.searchHot
           }
         }).then(res => {
           this.articles = res.data.articles
           this.pages = res.data.pages
           this.page = page
           this.count = res.data.count
+        })
+      },
+      /**
+       * 添加至推荐
+       */
+      goPush(item, boolean) {
+        axios.put('/api/article/' + item._id + '/' + item.articleClass._id + '/put', {
+          push: boolean,
+        }).then(res => {
+          if (res.data.success) {
+//            alert('更新成功')
+            item.push = boolean
+          } else {
+            alert('更新失败请重试！')
+          }
         })
       }
     },

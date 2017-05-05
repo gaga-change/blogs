@@ -91,17 +91,33 @@ exports.index = async(function* (req, res) {
   const title = req.query.title
   const articleClassId = req.query.articleClassId
   const articleMenuId = req.query.articleMenuId
+  const push = req.query.push
+  const hot = req.query.hot
   let limit = Number(req.query.limit)
   const options = {
     limit: limit,
     page: page
   }
   options.criteria = {}
+  options.sort = {createDate: -1} // 默认根据时间排序
   if (_id) options.criteria._id = _id
   if (title) options.criteria.title = new RegExp('(' + title + ')', 'i')
   if (articleClassId) options.criteria.articleClass = articleClassId
   if (articleMenuId) options.criteria.articleMenu = articleMenuId
+  if (push) options.criteria.push = push
+  if (hot) {
+    if (Number(hot) === -1)
+      options.sort = {clickNum: -1}
+    else {
+      options.sort = {clickNum: 1}
+    }
+  } // 根据点击量排序
   const articles = yield Article.list(options)
+  if (_id) { // 如果是查询某一个文章，则直接访问量添 1
+    let article = articles[0]
+    article.clickNum = article.clickNum + 1
+    article.save()
+  }
   const count = yield Article.count(options.criteria)
   res.json({
     title: 'Articles',

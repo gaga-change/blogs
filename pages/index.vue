@@ -3,11 +3,24 @@
     <vue-head :menus="menus"/>
     <vue-banner :show="bannerShow"></vue-banner>
     <!--<vue-container></vue-container>-->
-    结构区
-    <nuxt></nuxt>
+    <div class="container">
+      <header class="row">
+        <h4 class="pull-left">
+          文章<span class="text-primary">推荐</span>
+        </h4>
+      </header>
+      <div class="row">
+        <!--左侧 文章推荐-->
+        <section class="col-md-9" style="height: 300px; background-color: rgba(255,229,247,0.42)">
+          <nuxt></nuxt>
+        </section>
+        <!--右侧最新文章列表&友情链接-->
+        <aside class="col-md-3" style="height: 300px; background-color: #d7ffc1">
+        </aside>
+      </div>
+    </div>
   </div>
 </template>
-
 <script>
   import axios from '~plugins/axios'
   import Banner from '~components/Home.Banner.vue'
@@ -36,6 +49,18 @@
   }
 </script>
 
-<style >
-
+<style lang="scss" rel="stylesheet/scss" scoped>
+  /*所有内容*/
+  .container {
+    margin-top: 20px;
+    /*头部*/
+    & > header {
+      /*height: 10px;*/
+      background: url("/img/h_line.jpg") repeat-x center;
+      h4 {
+        padding-right: 10px;
+        background-color: #fff;
+      }
+    }
+  }
 </style>
