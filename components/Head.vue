@@ -30,7 +30,7 @@
             <li><a href="#">碎言碎语</a></li>
             <li><a href="#">学无止境</a></li>
             <li><a href="#">留言板</a></li>
-            <li v-if="user && user.isMaster"><nuxt-link to="/control">控制中心</nuxt-link></li>
+            <li v-if="user && user.isMaster"><nuxt-link to="/control/home">控制中心</nuxt-link></li>
             <li class="" v-if="!user">
               <nuxt-link to="/login" class="log">登入</nuxt-link>
               |

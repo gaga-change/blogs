@@ -4,7 +4,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <nuxt-link class="navbar-brand" to="/control">控制中心</nuxt-link>
+          <nuxt-link class="navbar-brand" to="/control/home">控制中心</nuxt-link>
           <nuxt-link class="navbar-brand" to="/">主站</nuxt-link>
         </div>
       </div>

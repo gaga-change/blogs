@@ -1,10 +1,10 @@
 <template>
   <div>
-    <!--<vue-head/>-->
+    <vue-head/>
     <vue-banner></vue-banner>
     <!--<vue-container></vue-container>-->
-    主页内容区
-    <!--<nuxt></nuxt>-->
+    结构区
+    <nuxt></nuxt>
   </div>
 </template>
 
@@ -12,7 +12,6 @@
   import Banner from '~components/Home.Banner.vue'
   import Container from '~components/Home.Container.vue'
   export default {
-    layout: 'blog',
     components: {
       'vue-banner': Banner,
       'vue-container': Container
