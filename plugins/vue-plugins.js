@@ -32,3 +32,15 @@ Vue.filter('prettyTime', function (value) {
     return parseInt(s / (60 * 60 * 24)) + '天前'
   }
 })
+Vue.filter('prettyTime02', function (value) {
+  // 2017-05-05
+  let d = new Date(value)
+
+  function per (num) {
+    if (num < 10) {
+      return '0' + num
+    } else return num
+  }
+
+  return d.getFullYear() + '-' + per(d.getMonth() + 1) + '-' + per(d.getDate())
+})
