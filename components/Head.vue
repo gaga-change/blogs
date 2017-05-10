@@ -30,7 +30,7 @@
               <nuxt-link :to="{name:'index-spoken'}" >碎言碎语</nuxt-link>
             </li>
             <li v-for="item in menus">
-              <nuxt-link :to="{name: 'index-menu', params: {menu: item._id}, query: {name: item.name} }" v-text="item.name" exact></nuxt-link>
+              <nuxt-link :to="{name: 'index-menuid', params: {menuid: item._id}, query: {name: item.name} }" v-text="item.name"></nuxt-link>
             </li>
             <!--<li><a href="#">留言板</a></li>-->
             <li v-if="user && user.isMaster"><nuxt-link to="/control/home">控制中心</nuxt-link></li>
@@ -86,7 +86,7 @@
   }
 
   .nuxt-link-active {
-    color: #222 !important;
+    color: #fc836d !important;
   }
 
   .mean-right a {

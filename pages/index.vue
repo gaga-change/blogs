@@ -21,6 +21,17 @@
         </section>
         <!--右侧最新文章列表&友情链接-->
         <aside class="col-md-3">
+          {{$route.params.menuid}}
+          <div class="rnav clearfix" v-if="sonMenu.length > 0 && $route.params.menuid">
+            <h2>栏目导航</h2>
+            <ul>
+              <li v-for="item in sonMenu">
+                <nuxt-link
+                  :to="{name: 'index-menuid', params: {menuid: $route.params.menuid}, query: {name: item.name, son: 1} }"
+                  v-text="item.name"></nuxt-link>
+              </li>
+            </ul>
+          </div>
           <div class="right-list">
             <h4><span>最新<span class="text-primary">文章</span></span></h4>
             <ul class="new-article">
@@ -28,7 +39,7 @@
                 <a href="#" v-text="item.title"></a>
               </li>
             </ul>
-            <h4><span>最新<span style="color: rgba(199,0,199,0.73)">排序</span></span></h4>
+            <h4><span>点击<span style="color: rgba(199,0,199,0.73)">排行</span></span></h4>
             <ul class="hot-article">
               <li v-for="item in hotArticle">
                 <a href="#" v-text="item.title"></a>
@@ -54,6 +65,9 @@
     computed: {
       menuName() {
         return this.$store.state.menuName
+      },
+      sonMenu () {
+        return this.$store.state.sonMenu
       }
     },
     asyncData ({params, error}) {
@@ -91,6 +105,72 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+  /*栏目导航*/
+  .rnav {
+    margin: 0;
+    /*overflow: hidden;*/
+    background: url(/images/6167.png) no-repeat left top #fff;
+    /*position: fixed;*/
+    position: relative;
+    z-index: 1;
+    ul {
+      padding: 0;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 500;
+      padding-left: 40px;
+      line-height: 30px;
+      height: 30px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    li {
+      position: relative;
+      width: 100%;
+      text-align: center;
+      display: inline-block;
+      margin-bottom: 5px;
+      margin-right: 5px;
+      float: left;
+      height: 40px;
+      line-height: 38px;
+      background-color: white;
+      a {
+        color: #333;
+        display: block;
+        -webkit-transition: all 1s;
+        -moz-transition: all 1s;
+        -o-transition: all 1s;
+        transition: all 0.1s;
+        border: #CCC 1px solid;
+        text-decoration: none;
+        &:before {
+          position: absolute;
+          z-index: -1;
+          content: '';
+          top: calc(50% - 10px);
+          left: 0;
+          border-style: solid;
+          border-width: 10px 10px 10px 0;
+          border-color: transparent #e1e1e1 transparent transparent;
+          -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+          -webkit-transition-property: transform;
+          transition-property: transform;
+        }
+        &:hover, &:active {
+          -webkit-transform: translateX(10px);
+          transform: translateX(10px);
+          &:before {
+            -webkit-transform: translateX(-10px);
+            transform: translateX(-10px);
+          }
+        }
+      }
+    }
+  }
+
   .t_nav {
     border-bottom: #F1F1F1 1px solid;
     font-size: 16px;
