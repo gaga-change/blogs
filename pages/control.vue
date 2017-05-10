@@ -14,7 +14,7 @@
         <!--左侧菜单-->
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <nuxt-link to="/control" tag="li" exact><a> 网站信息 </a></nuxt-link>
+            <nuxt-link to="/control/home" tag="li" exact><a> 网站信息 </a></nuxt-link>
             <nuxt-link to="/control/articlemenu" tag="li" exact><a> 文章类型 </a></nuxt-link>
             <nuxt-link to="/control/articleclass" tag="li" exact><a> 文章类别 </a></nuxt-link>
             <nuxt-link to="/control/article" tag="li" exact><a> 文章列表 </a></nuxt-link>
