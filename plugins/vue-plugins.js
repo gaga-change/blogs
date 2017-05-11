@@ -2,14 +2,8 @@
  * Created by gaga on 2017/4/30.
  */
 import Vue from 'vue'
-import newArticle from '../components/newArticle.vue'
-import hotArticle from '../components/hotArticle.vue'
-import comment from '../components/comment.vue'
 import head from '../components/Head.vue'
 
-Vue.component('new-article', newArticle)
-Vue.component('hot-article', hotArticle)
-Vue.component('vue-comment', comment)
 Vue.component('vue-head', head)
 // 注册
 Vue.filter('prettyTime', function (value) {

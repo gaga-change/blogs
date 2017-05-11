@@ -2,22 +2,10 @@
   <div>
     <div>
       <ul class="bloglist">
-<!--        <li class="arrow_box">
-          <div class="sy">
-            <p class="clearfix text-muted">
-              <img src="http://images.yanjundong.top/blog_02.jpg?imageView2/1/w/185/h/118/format/jpg/q/86"
-                   alt="生活的坑都是自己挖的"/>
-              生活的坑都是自己挖的！譬如，听别人讲话，听到最后，耳朵里只会记住两类话：最愿意听的和最不愿意听的。然后，喜欢听的未必化成快乐，但不喜欢听的一定化成了痛苦，其他的都化成了风。
-            </p>
-          </div>
-          <span class="dateview">2015-02-01</span>
-        </li>-->
         <li v-for="item in spokens" class="arrow_box">
           <div class="sy">
             <p class="clearfix text-muted">
               <img v-if="item.imageUrl" :src="item.imageUrl">
-              <!--<img src="http://images.yanjundong.top/blog_02.jpg?imageView2/1/w/185/h/118/format/jpg/q/86"-->
-                   <!--alt="生活的坑都是自己挖的"/>-->
               <span v-text="item.intro"></span>
             </p>
           </div>
@@ -30,27 +18,29 @@
       <ul class="pagination">
         <li><a> 总：<span v-text="count"></span>条</a></li>
         <li v-if="page > 3 && pages > 5">
-          <a href="javescript:void(0)" @click="getUserList(1)">
+          <nuxt-link :to="{name:'index-spoken', query: {page: '1'}}">
             <span><<</span>
-          </a>
+          </nuxt-link>
         </li>
         <li v-if="page > 1">
-          <a href="javescript:void(0)" @click="getUserList(page - 1)">
+          <nuxt-link :to="{name:'index-spoken', query: {page: page -1}}">
             <span><</span>
-          </a>
+          </nuxt-link>
         </li>
         <li v-for="item in myPages" :class="{'active': item === page }">
-          <a href="javescript:void(0)" @click="getUserList(item)">{{item}}</a>
+          <nuxt-link :to="{name:'index-spoken', query: {page: item}}">
+            {{item}}
+          </nuxt-link>
         </li>
         <li v-if="page < pages">
-          <a href="javescript:void(0)" @click="getUserList(page + 1)">
+          <nuxt-link :to="{name:'index-spoken', query: {page: page + 1}}">
             <span>></span>
-          </a>
+          </nuxt-link>
         </li>
         <li v-if="page < pages - 2 && pages > 5">
-          <a href="javescript:void(0)" @click="getUserList(pages)">
+          <nuxt-link :to="{name:'index-spoken', query: {page: pages}}">
             <span>>></span>
-          </a>
+          </nuxt-link>
         </li>
       </ul>
     </nav>
@@ -63,18 +53,19 @@
     created() {
       this.$store.commit('SET_MENU_NAME', '碎言碎语')
     },
-    asyncData ({params, error}) {
+    asyncData ({params, error, query}) {
+      const page = Number(query.page) || 1
       return axios.get('/api/spoken', {
         params: {
           limit: 10,
-          page: 1
+          page: page
         }
       }).then((res) => {
         return {
           spokens: res.data.data,
           count: res.data.count,
           limit: 10,
-          page: 1,
+          page: page,
           pages: res.data.pages,
         }
       })

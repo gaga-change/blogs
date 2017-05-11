@@ -12,7 +12,7 @@
         </p>
         <figure v-if="item.imageUrl">
           <a :title="item.title" href="#">
-          <img :src="item.imageUrl" :alt="item.title"></a>
+            <img :src="item.imageUrl" :alt="item.title"></a>
         </figure>
         <div class="nlist">
           <p v-text="item.intro"></p>
@@ -26,27 +26,33 @@
       <ul class="pagination">
         <li><a> 总：<span v-text="count"></span>条</a></li>
         <li v-if="page > 3 && pages > 5">
-          <a href="javascript:void(0)" @click="getUserList(1)">
+          <nuxt-link
+            :to="{ name: 'index-menu-menuid',params: {menuid: params.menuid},query: {page: 1, name: query.name} } ">
             <span><<</span>
-          </a>
+          </nuxt-link>
         </li>
         <li v-if="page > 1">
-          <a href="javascript:void(0)" @click="getUserList(page - 1)">
+          <nuxt-link
+            :to="{ name: 'index-menu-menuid',params: {menuid: params.menuid},query: {name: query.name, page: page - 1} } ">
             <span><</span>
-          </a>
+          </nuxt-link>
         </li>
         <li v-for="item in myPages" :class="{'active': item === page }">
-          <a href="javascript:void(0)" @click="getUserList(item)">{{item}}</a>
+          <nuxt-link
+            :to="{ name: 'index-menu-menuid',params: {menuid: params.menuid},query: {name: query.name, page: item} } ">{{item}}
+          </nuxt-link>
         </li>
         <li v-if="page < pages">
-          <a href="javascript:void(0)" @click="getUserList(page + 1)">
+          <nuxt-link
+            :to="{ name: 'index-menu-menuid',params: {menuid: params.menuid},query: {name: query.name, page: page + 1} } ">
             <span>></span>
-          </a>
+          </nuxt-link>
         </li>
         <li v-if="page < pages - 2 && pages > 5">
-          <a href="javascript:void(0)" @click="getUserList(pages)">
+          <nuxt-link
+            :to="{ name: 'index-menu-menuid',params: {menuid: params.menuid},query: {name: query.name, page: pages} } ">
             <span>>></span>
-          </a>
+          </nuxt-link>
         </li>
       </ul>
     </nav>
@@ -67,10 +73,11 @@
         count: 0,
         limit: 10,
         page: 1,
-        pages: 1
+        pages: 1,
       }
     },
-    asyncData ({params, error, store}) {
+    asyncData ({params, error, store, query}) {
+      const page = Number(query.page) || 1
       return axios.get('/api/article/class', {
         params: {
           limit: 30,
@@ -85,18 +92,17 @@
           // 获取列表（主要内容）
           return axios.get('/api/article', {
             params: {
-              page: 1,
+              page: page,
               limit: 10,
               articleMenuId: params.menuid
             }
           }).then(res => {
             if (res.data.success) {
-//              return {}
               return {
                 articles: res.data.articles,
                 count: res.data.count,
                 limit: 10,
-                page: 1,
+                page: page,
                 pages: res.data.pages,
               }
             } else {
@@ -136,12 +142,14 @@
           (this.page > (this.pages - 2)) ? this.pages : (middle + 2)
         ]
       },
-      query(){
-        return this.$route.query
+      query(){return this.$route.query},
+      params(){
+        return this.$route.params
       }
     },
     created() {
       this.$store.commit('SET_MENU_NAME', this.query.name || '')
+
     },
     methods: {
       // 根据页码获取 列表
@@ -173,6 +181,7 @@
   }
 
   li.item {
+    position: relative;
     h2 {
       color: #333;
       font-size: 16px;

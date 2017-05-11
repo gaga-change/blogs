@@ -27,14 +27,22 @@
               <nuxt-link to="/" exact>首页</nuxt-link>
             </li>
             <li>
-              <nuxt-link :to="{name:'index-spoken'}" >碎言碎语</nuxt-link>
+              <nuxt-link :to="{name:'index-spoken', query: {page: 1}}">碎言碎语</nuxt-link>
             </li>
             <li v-for="item in menus" v-if="item.name != '留言'">
-              <nuxt-link :to="{name: 'index-menu-menuid', params: {menuid: item._id}, query: {name: item.name} }" v-text="item.name"></nuxt-link>
+              <nuxt-link
+                :to="{
+                  name: 'index-menu-menuid',
+                  params: {menuid: item._id, page: 1},
+                  query: {name: item.name}
+                  }"
+                v-text="item.name"></nuxt-link>
             </li>
             <li><a href="#">留言</a></li>
             <!--<li><a href="#">留言板</a></li>-->
-            <li v-if="user && user.isMaster"><nuxt-link to="/control/home">控制中心</nuxt-link></li>
+            <li v-if="user && user.isMaster">
+              <nuxt-link to="/control/home">控制中心</nuxt-link>
+            </li>
             <li class="" v-if="!user">
               <nuxt-link :to="{name: 'index-login'}" class="log">登入</nuxt-link>
               |
