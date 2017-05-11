@@ -34,6 +34,7 @@ connect()
 .on('disconnected', connect)
 .once('open', listen)
 function listen () {
+  console.log("连接数据库成功")
   app.listen(port)
   console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
 }
@@ -41,5 +42,6 @@ function listen () {
 
 function connect () {
   var options = {server: {socketOptions: {keepAlive: 1}}}
-  return mongoose.connect('mongodb://localhost/test', options).connection
+  // return mongoose.connect('mongodb://localhost/test', options).connection
+  return mongoose.connect('mongodb://127.0.0.1:27017/test', options).connection
 }

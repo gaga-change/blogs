@@ -27,7 +27,7 @@
             <ul>
               <li v-for="item in sonMenu">
                 <nuxt-link
-                  :to="{name: 'index-menuid', params: {menuid: $route.params.menuid}, query: {name: item.name, son: 1} }"
+                  :to="{name: 'index-menu-menuid', params: {menuid: $route.params.menuid}, query: {name: item.name, son: 1} }"
                   v-text="item.name"></nuxt-link>
               </li>
             </ul>

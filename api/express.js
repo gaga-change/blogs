@@ -77,7 +77,7 @@ module.exports = function (app, passport) {
     saveUninitialized: true,
     secret: pkg.name,
     store: new mongoStore({
-      url: 'mongodb://localhost/test',
+      url: 'mongodb://127.0.0.1:27017/test',
       collection: 'sessions'
     })
   }))
