@@ -3,12 +3,12 @@
     <ul class="list">
       <li class="item" v-for="item in articles">
         <h2>
-          <a :title="item.title" href="#" v-text="item.title"></a>
+          <nuxt-link :title="item.title" :to="{name: 'index-detail-articleid', params: {articleid: item._id}}" v-text="item.title"></nuxt-link>
         </h2>
         <p class="dateview">
           <span>发布时间：{{item.createDate | prettyTime02}}</span>
           <span>作者：{{item.author}}</span>
-          <span>[<a href="/download/div/" v-text="item.articleClass.name"></a>]</span>
+          <span>[<nuxt-link :to="{name: 'index-detail-articleid', params: {articleid: item._id}}" v-text="item.articleClass.name"></nuxt-link>]</span>
         </p>
         <figure v-if="item.imageUrl">
           <a :title="item.title" href="#">
@@ -16,7 +16,7 @@
         </figure>
         <div class="nlist">
           <p v-text="item.intro"></p>
-          <a href="#" target="_blank" :title="item.title" class="readmore">详细信息&gt;&gt;</a>
+          <nuxt-link :to="{name: 'index-detail-articleid', params: {articleid: item._id}}" :title="item.title" class="readmore">详细信息&gt;&gt;</nuxt-link>
         </div>
         <div class="line"></div>
       </li>
@@ -66,7 +66,9 @@
    * 2. 显示子菜单  传一个 query.son = 1
    */
   import axios from '~plugins/axios'
+  import NuxtLink from '../../../.nuxt/components/nuxt-link'
   export default {
+    components: {NuxtLink},
     data() {
       return {
         articles: [],

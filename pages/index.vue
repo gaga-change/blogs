@@ -11,6 +11,17 @@
       </header>
       <h4 class="t_nav" v-if="!bannerShow">
         <!--<span>“慢生活”不是懒惰，放慢速度不是拖延时间，而是让我们在生活中寻找到平衡。</span>-->
+        <span v-if="$route.name === 'index-detail-articleid' && !!article">您当前的位置：<nuxt-link :to="{path: '/'}">首页</nuxt-link>&nbsp;&gt;&nbsp;
+          <nuxt-link  :to="{
+                  name: 'index-menu-menuid',
+                  params: {menuid: article.articleMenu._id},
+                  query: {name: article.articleMenu.name, page: 1}
+                  }" v-text="article.articleMenu.name"></nuxt-link>&nbsp;&gt;&nbsp;
+          <nuxt-link  :to="{
+                    name: 'index-menu-menuid',
+                  params: {menuid: article.articleMenu._id},
+                    query: {name: article.articleClass.name, son: 1, page: 1, articleClassId: article.articleClass._id}
+                  }" v-text="article.articleClass.name"></nuxt-link></span>
         <nuxt-link to="/" class="n1">网站首页</nuxt-link>
         <a href="javascript:void(0)" class="n2">{{menuName}}</a>
       </h4>
@@ -39,13 +50,15 @@
             <h4><span>最新<span class="text-primary">文章</span></span></h4>
             <ul class="new-article">
               <li v-for="item in newArticle">
-                <a href="#" v-text="item.title"></a>
+                <nuxt-link :to="{name: 'index-detail-articleid', params: {articleid: item._id}}"
+                           v-text="item.title"></nuxt-link>
               </li>
             </ul>
             <h4><span>点击<span style="color: rgba(199,0,199,0.73)">排行</span></span></h4>
             <ul class="hot-article">
               <li v-for="item in hotArticle">
-                <a href="#" v-text="item.title"></a>
+                <nuxt-link :to="{name: 'index-detail-articleid', params: {articleid: item._id}}"
+                           v-text="item.title"></nuxt-link>
               </li>
             </ul>
           </div>
@@ -66,6 +79,7 @@
       }
     },
     computed: {
+      article() {return this.$store.state.article},
       menuName() {
         return this.$store.state.menuName
       },
@@ -180,18 +194,25 @@
     font-weight: normal;
     line-height: 40px;
     height: 40px;
-    span {
+    & > span {
       float: right;
       color: #999;
+      background: url(/images/5849.png) no-repeat left center;
+      padding-left: 20px;
+      font-size: 80%;
+      a {
+        color: #929292;
+        font-size: 50%;
+      }
     }
-    a {
+    & > a {
       width: 100px;
       display: block;
       text-align: center;
       color: #fff;
       float: left;
     }
-    a:hover {
+    & > a:hover {
       text-decoration: none;
       color: #333;
     }

@@ -33,8 +33,8 @@
               <nuxt-link
                 :to="{
                   name: 'index-menu-menuid',
-                  params: {menuid: item._id, page: 1},
-                  query: {name: item.name}
+                  params: {menuid: item._id},
+                  query: {name: item.name, page: 1}
                   }"
                 v-text="item.name"></nuxt-link>
             </li>

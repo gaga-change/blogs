@@ -3,13 +3,13 @@
     <div class="media" v-for="item in articles">
       <h4 v-text="item.title"></h4>
       <div class="media-left media-middle">
-        <a href="#">
+        <nuxt-link :to="{name: 'index-detail-articleid', params: {articleid: item._id}}">
           <img class="media-object" :src="item.imageUrl">
-        </a>
+        </nuxt-link>
       </div>
       <div class="media-body">
         <p v-text="item.intro"></p>
-        <a class="btn" href="#">阅读全文</a>
+        <nuxt-link class="btn" :to="{name: 'index-detail-articleid', params: {articleid: item._id}}">阅读全文</nuxt-link>
       </div>
       <p class="dateview">
         <span>{{item.createDate | prettyTime02}}</span>

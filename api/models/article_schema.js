@@ -71,6 +71,7 @@ ArticleSchema.statics = {
     if (criteria._id) {
       return this.find(criteria)
       .populate('articleClass', '_id name')
+      .populate('articleMenu', '_id name')
       .sort({createdAt: -1})
       .limit(limit)
       .skip(limit * page)
