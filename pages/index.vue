@@ -21,13 +21,16 @@
         </section>
         <!--右侧最新文章列表&友情链接-->
         <aside class="col-md-3">
-          {{$route.params.menuid}}
           <div class="rnav clearfix" v-if="sonMenu.length > 0 && $route.params.menuid">
             <h2>栏目导航</h2>
             <ul>
               <li v-for="item in sonMenu">
                 <nuxt-link
-                  :to="{name: 'index-menu-menuid', params: {menuid: $route.params.menuid}, query: {name: item.name, son: 1, page: 1} }"
+                  :to="{
+                    name: 'index-menu-menuid',
+                    params: {menuid: $route.params.menuid},
+                    query: {name: item.name, son: 1, page: 1, articleClassId: item._id}
+                  }"
                   v-text="item.name"></nuxt-link>
               </li>
             </ul>

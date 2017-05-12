@@ -94,7 +94,8 @@
             params: {
               page: page,
               limit: 10,
-              articleMenuId: params.menuid
+              articleMenuId: params.menuid,
+              articleClassId: query.articleClassId
             }
           }).then(res => {
             if (res.data.success) {
