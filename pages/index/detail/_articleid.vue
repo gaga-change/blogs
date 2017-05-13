@@ -10,7 +10,8 @@
       <div v-html="article.content"></div>
     </div>
     <!--回复框-->
-    <div id="reply" class="clearfix" style="padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid gainsboro;">
+    <div id="reply" class="clearfix"
+         style="padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid gainsboro;">
       <div class="col-xs-8">
         <textarea class="ipt-txt " cols="80" name="msg" rows="5"
                   v-model="comment"
@@ -33,7 +34,8 @@
             <div class="info">
               <span class="time">{{item.createDate | prettyTime03}}</span>
               <span class="reply btn-hover" @click="replyClick(item)">回复</span>
-              <span class="reply btn-hover">删除</span>
+              <span class="reply btn-hover" @click="delComment(item)"
+                    v-if="user._id === item.user._id || user.isMaster">删除</span>
             </div>
             <ul class="media-list">
               <li class="media" v-for="itemSon in item.comments" style="margin-top: 10px">
@@ -43,8 +45,9 @@
                   <p class="con" v-html="itemSon.body"></p>
                   <div class="info">
                     <span class="time">{{itemSon.createDate | prettyTime03}}</span>
-                    <span class="reply btn-hover">回复</span>
-                    <span class="reply btn-hover">删除</span>
+                    <span class="reply btn-hover" @click="replyClick(item, itemSon.user.name)">回复</span>
+                    <span class="reply btn-hover" @click="delSonComment(item,itemSon)"
+                          v-if="user._id === itemSon.user._id || user.isMaster">删除</span>
                   </div>
                 </div>
               </li>
@@ -179,9 +182,32 @@
           (this.page > (this.pages - 2)) ? (this.pages - 1) : (middle + 1),
           (this.page > (this.pages - 2)) ? this.pages : (middle + 2)
         ]
-      }
+      },
+      user () {return this.$store.state.user}
     },
     methods: {
+      /*删除主评论*/
+      delComment (item) {
+        if (confirm('删除后无法恢复，是否继续删除'))
+          axios.delete('/api/comment/' + item._id).then(res => {
+            if (res.data.success) {
+              this.getList(this.page, false)
+            } else {
+              console.log('删除错误 主评论', res.data)
+            }
+          })
+      },
+      /*删除次评论*/
+      delSonComment (item, itemSon) {
+        if (confirm('删除后无法恢复，是否继续删除'))
+          axios.delete('/api/son/comment/' + item._id + '/' + itemSon._id).then(res => {
+            if (res.data.success) {
+              this.getList(this.page, false)
+            } else {
+              console.log('删除错误 次评论', res.data)
+            }
+          })
+      },
       /*添加评论*/
       addComment () {
         if (this.comment === '') {
@@ -227,7 +253,7 @@
             page: page,
           }
         }).then(res => {
-          if(goTop) {
+          if (goTop) {
             scrollTo(0, $('#reply').offset().top - 20)
           }
           if (res.data.success) {
@@ -239,10 +265,10 @@
         })
       },
       /*点击回复*/
-      replyClick(item) {
-        if (item.reply) {
-          item.reply = false
-          return
+      replyClick(item, str) {
+        item.comment = ''
+        if (str) {
+          item.comment = '回复 @ ' + str + ':'
         }
         this.mdComments.forEach(v => {
           v.reply = false
