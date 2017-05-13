@@ -25,13 +25,13 @@ module.exports = function (app, passport) {
   router.param('commentSonId', commentSon.load)
 
 // 主评论 增 删 改 查
-  router.post('/comment/:articleId', comment.create)
+  router.post('/comment/:articleId',auth.requiresLogin, comment.create)
   router.delete('/comment/:commentId', comment.destroy)
   router.put('/comment/:articleId/:commentId', comment.update)
   router.get('/comment', comment.index)
 
 // 次评论 增 删 改 查
-  router.post('/son/comment/:commentId', commentSon.create)
+  router.post('/son/comment/:commentId',auth.requiresLogin, commentSon.create)
   router.delete('/son/comment/:commentId/:commentSonId', commentSon.destroy)
   router.put('/son/comment/:commentId/:commentSonId', commentSon.update)
 

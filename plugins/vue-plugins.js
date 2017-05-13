@@ -3,6 +3,8 @@
  */
 import Vue from 'vue'
 import head from '../components/Head.vue'
+const MarkdownIt = require('markdown-it')
+const md = new MarkdownIt();
 
 Vue.component('vue-head', head)
 // 注册
@@ -37,4 +39,7 @@ Vue.filter('prettyTime02', function (value) {
   }
 
   return d.getFullYear() + '-' + per(d.getMonth() + 1) + '-' + per(d.getDate())
+})
+Vue.filter('md', function (value) {
+  return md.render(value)
 })

@@ -59,7 +59,7 @@ exports.create = async(function* (req, res) {
 
 exports.destroy = async(function* (req, res) {
   yield req.comment.remove()
-  res.json({success: true, msg: 'Comment 文章删除成功'})
+  res.json({success: true, msg: 'Comment 评论删除成功'})
 })
 
 /**
