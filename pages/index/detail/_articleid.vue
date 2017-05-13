@@ -10,7 +10,7 @@
       <div v-html="article.content"></div>
     </div>
     <!--回复框-->
-    <div class="clearfix" style="padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid gainsboro;">
+    <div id="reply" class="clearfix" style="padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid gainsboro;">
       <div class="col-xs-8">
         <textarea class="ipt-txt " cols="80" name="msg" rows="5"
                   v-model="comment"
@@ -108,6 +108,7 @@
    * 数据获取 通过id拿到详情
    * 相关通过store传入到 index，生成一个当前位置
    */
+  import $ from 'jquery'
   import Vue from 'vue'
   import axios from '~plugins/axios'
   const MarkdownIt = require('markdown-it')
@@ -140,7 +141,7 @@
       })
     },
     created() {
-      this.getList(1)
+      this.getList(1, false)
     },
     computed: {
       query(){return this.$route.query},
@@ -192,7 +193,7 @@
           res => {
             this.sendComment = false
             this.comment = ''
-            if (this.page === 1) this.getList(this.page)
+            if (this.page === 1) this.getList(this.page, false)
           },
           () => {
             console.log("评论提交错误")
@@ -210,7 +211,7 @@
           res => {
             item.sendComment = false
             item.comment = ''
-            this.getList(this.page)
+            this.getList(this.page, false)
           },
           () => {
             console.log("评论提交错误")
@@ -218,7 +219,7 @@
         )
       },
       /*获取评论列表*/
-      getList(page) {
+      getList(page, goTop = true) {
         axios.get('/api/comment', {
           params: {
             articleId: this.article._id,
@@ -226,6 +227,9 @@
             page: page,
           }
         }).then(res => {
+          if(goTop) {
+            scrollTo(0, $('#reply').offset().top - 20)
+          }
           if (res.data.success) {
             this.comments = res.data.data
             this.pages = res.data.pages
