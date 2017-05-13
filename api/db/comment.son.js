@@ -25,7 +25,12 @@ exports.load = function (req, res, next, id) {
 exports.create = async(function* (req, res) {
   const comment = req.comment
   yield comment.addComment(req.user, req.body)
-  res.json({success: true, msg: '添加成功'})
+  res.json({success: true, msg: '添加成功',
+    comment: {
+      body: req.body.body,
+      user: req.user
+    }
+  })
 })
 
 /**

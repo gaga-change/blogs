@@ -98,7 +98,7 @@ CommentSchema.statics = {
     return this.find(criteria)
     .populate('user', 'name email _id isMaster')
     .populate('comments.user', 'name email _id isMaster')
-    .sort({ createdAt: -1 })
+    .sort({ createDate: -1 })
     .limit(limit)
     .skip(limit * page)
     .exec();

@@ -40,7 +40,8 @@ exports.create = async(function* (req, res) {
     yield comment.save()
     res.json({
       success: true,
-      msg: 'Comment 添加成功'
+      msg: 'Comment 添加成功',
+      comment: comment
     })
   } catch (err) {
     const errors = Object.keys(err.errors)

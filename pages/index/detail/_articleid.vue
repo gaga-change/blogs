@@ -9,8 +9,8 @@
       </p>
       <div v-html="article.content"></div>
     </div>
-    <!--评论区-->
-    <div class="clearfix">
+    <!--回复框-->
+    <div class="clearfix" style="padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid gainsboro;">
       <div class="col-xs-8">
         <textarea class="ipt-txt " cols="80" name="msg" rows="5"
                   v-model="comment"
@@ -22,32 +22,46 @@
         </button>
       </div>
     </div>
+    <!--评论区-->
     <div>
       <ul class="media-list">
-        <li class="media" v-for="item in mdComments">
+        <li class="media" v-for="item in mdComments" style="border-bottom: 1px solid gainsboro;">
           <div class="media-left"></div>
           <div class="media-body">
             <p class="user" v-text="item.user.name"></p>
             <p class="con" v-html="item.body"></p>
             <div class="info">
-              <span class="time">2017-05-10 20:35</span>
-              <span class="reply btn-hover">回复</span>
+              <span class="time">{{item.createDate | prettyTime03}}</span>
+              <span class="reply btn-hover" @click="replyClick(item)">回复</span>
               <span class="reply btn-hover">删除</span>
             </div>
-            <!--   <ul class="media-list">
-                 <li class="media">
-                   <div class="media-left"></div>
-                   <div class="media-body">
-                     <p class="user">用户名</p>
-                     <p class="con">评论内容</p>
-                     <div class="info">
-                       <span class="time">2017-05-10 20:35</span>
-                       <span class="reply btn-hover">回复</span>
-                       <span class="reply btn-hover">删除</span>
-                     </div>
-                   </div>
-                 </li>
-               </ul>-->
+            <ul class="media-list">
+              <li class="media" v-for="itemSon in item.comments" style="margin-top: 10px">
+                <div class="media-left" style="width: 8%"></div>
+                <div class="media-body" style="border-top: 1px solid gainsboro; padding-top: 10px">
+                  <p class="user" v-text="itemSon.user.name"></p>
+                  <p class="con" v-html="itemSon.body"></p>
+                  <div class="info">
+                    <span class="time">{{itemSon.createDate | prettyTime03}}</span>
+                    <span class="reply btn-hover">回复</span>
+                    <span class="reply btn-hover">删除</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div style="margin-bottom: 10px"></div>
+            <div v-if="item.reply" class="clearfix">
+              <div class="col-xs-8">
+        <textarea class="ipt-txt " cols="80" name="msg" rows="5"
+                  v-model="item.comment"
+                  placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。"></textarea>
+              </div>
+              <div class="col-xs-4">
+                <button type="button" class="comment-submit" @click="addSonComment(item)">
+                  {{item.sendComment ? '正在发送' : '发表回复'}}
+                </button>
+              </div>
+            </div>
           </div>
         </li>
       </ul>
@@ -113,7 +127,7 @@
             comments: [],
             comment: '',
             sendComment: false,
-            limit: 10,
+            limit: 5,
             count: 0,
             page: 1,
             pages: 1
@@ -135,6 +149,13 @@
         var md = Vue.filter('md')
         this.comments.forEach(v => {
           v.body = md(v.body)
+//          v.reply = false
+          Vue.set(v, 'reply', false)
+          Vue.set(v, 'sendComment', false)
+          Vue.set(v, 'comment', '')
+          v.comments.forEach(w => {
+            w.body = md(w.body)
+          })
         })
         return this.comments
       },
@@ -171,6 +192,25 @@
           res => {
             this.sendComment = false
             this.comment = ''
+            if (this.page === 1) this.getList(this.page)
+          },
+          () => {
+            console.log("评论提交错误")
+          }
+        )
+      },
+      /*子评论添加*/
+      addSonComment (item) {
+        if (item.comment === '') {
+          alert('内容不能为空')
+          return
+        }
+        item.sendComment = true
+        axios.post('/api/son/comment/' + item._id, {body: item.comment}).then(
+          res => {
+            item.sendComment = false
+            item.comment = ''
+            this.getList(this.page)
           },
           () => {
             console.log("评论提交错误")
@@ -193,6 +233,17 @@
             this.count = res.data.count
           }
         })
+      },
+      /*点击回复*/
+      replyClick(item) {
+        if (item.reply) {
+          item.reply = false
+          return
+        }
+        this.mdComments.forEach(v => {
+          v.reply = false
+        })
+        item.reply = true;
       }
     }
   }
@@ -201,6 +252,18 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
   div {
     font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+  }
+
+  .btn-hover {
+    padding: 0 5px;
+    border-radius: 4px;
+    margin-right: 15px;
+    cursor: pointer;
+    display: inline-block;
+    &:hover {
+      color: #00a1d6;
+      background: #e5e9ef;
+    }
   }
 
   .media {
