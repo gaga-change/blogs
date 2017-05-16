@@ -38,12 +38,12 @@
                   }"
                 v-text="item.name"></nuxt-link>
             </li>
-            <li><a href="#">留言</a></li>
+            <li><router-link :to="{name: 'index-message'}">留言</router-link></li>
             <!--<li><a href="#">留言板</a></li>-->
             <li v-if="user && user.isMaster">
               <nuxt-link to="/control/home">控制中心</nuxt-link>
             </li>
-            <li class="" v-if="!user">
+            <li class="log-li" v-if="!user">
               <nuxt-link :to="{name: 'index-login'}" class="log">登入</nuxt-link>
               |
               <nuxt-link :to="{name: 'index-signup'}" class="log">注册</nuxt-link>
@@ -81,8 +81,12 @@
     }
   }
 </script>
-<style scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
+  .log-li {margin-left: 20px}
   .mean-right .log {
+    @media (max-width: 768px) {
+      line-height: 20px;
+    }
     padding: 0px !important;
     line-height: 80px;
     font-size: 3px;
@@ -99,6 +103,10 @@
   }
 
   .mean-right a {
+    @media (max-width: 768px) {
+      font-size: 15px;
+      padding: 5px 20px !important;
+    }
     font-size: 18px;
     padding: 30px 15px !important;
   }
