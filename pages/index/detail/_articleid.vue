@@ -35,7 +35,7 @@
               <span class="time">{{item.createDate | prettyTime03}}</span>
               <span class="reply btn-hover" @click="replyClick(item)">回复</span>
               <span class="reply btn-hover" @click="delComment(item)"
-                    v-if="user._id === item.user._id || user.isMaster">删除</span>
+                    v-if="user && (user._id === item.user._id || user.isMaster)">删除</span>
             </div>
             <ul class="media-list">
               <li class="media" v-for="itemSon in item.comments" style="margin-top: 10px">
@@ -47,7 +47,7 @@
                     <span class="time">{{itemSon.createDate | prettyTime03}}</span>
                     <span class="reply btn-hover" @click="replyClick(item, itemSon.user.name)">回复</span>
                     <span class="reply btn-hover" @click="delSonComment(item,itemSon)"
-                          v-if="user._id === itemSon.user._id || user.isMaster">删除</span>
+                          v-if="user && (user._id === itemSon.user._id || user.isMaster)">删除</span>
                   </div>
                 </div>
               </li>
@@ -98,7 +98,6 @@
         </li>
       </ul>
     </nav>
-
   </div>
 </template>
 
@@ -210,6 +209,10 @@
       },
       /*添加评论*/
       addComment () {
+        if (!this.user) {
+          this.$router.push({name: 'index-login', query: {'retpath': this.$route.fullPath}})
+          return
+        }
         if (this.comment === '') {
           alert('内容不能为空')
           return
@@ -228,6 +231,10 @@
       },
       /*子评论添加*/
       addSonComment (item) {
+        if (!this.user) {
+          this.$router.push({name: 'index-login', query: {'retpath': this.$route.fullPath}})
+          return
+        }
         if (item.comment === '') {
           alert('内容不能为空')
           return

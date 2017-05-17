@@ -1,13 +1,13 @@
 <template>
   <div>
     <!--<div class="index_about">-->
-      <!--<h2 class="text-center" v-text="article.title"></h2>-->
-      <!--<p class="box_c small">-->
-        <!--<span class="d_time">发布时间：<span>{{article.createDate | prettyTime02}}</span></span>-->
-        <!--<span>编辑：<span v-text="article.author"></span></span>-->
-        <!--<span>阅读（<span v-text="article.clickNum"></span>）</span>-->
-      <!--</p>-->
-      <!--<div v-html="article.content"></div>-->
+    <!--<h2 class="text-center" v-text="article.title"></h2>-->
+    <!--<p class="box_c small">-->
+    <!--<span class="d_time">发布时间：<span>{{article.createDate | prettyTime02}}</span></span>-->
+    <!--<span>编辑：<span v-text="article.author"></span></span>-->
+    <!--<span>阅读（<span v-text="article.clickNum"></span>）</span>-->
+    <!--</p>-->
+    <!--<div v-html="article.content"></div>-->
     <!--</div>-->
     <!--回复框-->
     <div id="reply" class="clearfix"
@@ -35,7 +35,7 @@
               <span class="time">{{item.createDate | prettyTime03}}</span>
               <span class="reply btn-hover" @click="replyClick(item)">回复</span>
               <span class="reply btn-hover" @click="delComment(item)"
-                    v-if="user._id === item.user._id || user.isMaster">删除</span>
+                    v-if="user && (user._id === item.user._id || user.isMaster)">删除</span>
             </div>
             <ul class="media-list">
               <li class="media" v-for="itemSon in item.comments" style="margin-top: 10px">
@@ -47,7 +47,7 @@
                     <span class="time">{{itemSon.createDate | prettyTime03}}</span>
                     <span class="reply btn-hover" @click="replyClick(item, itemSon.user.name)">回复</span>
                     <span class="reply btn-hover" @click="delSonComment(item,itemSon)"
-                          v-if="user._id === itemSon.user._id || user.isMaster">删除</span>
+                          v-if="user && (user._id === itemSon.user._id || user.isMaster)">删除</span>
                   </div>
                 </div>
               </li>
@@ -129,32 +129,32 @@
         pages: 1
       }
     },
-/*    asyncData ({params, error, store, query}) {
-      return axios.get('/api/article', {
-        params: {item: params.articleid}
-      }).then(res => {
-        if (res.data.success) {
-          store.commit('SET_MENU_NAME', res.data.articles[0].articleClass.name || '')
-          store.commit('setArticle', res.data.articles[0] || '')
-          let article = res.data.articles[0]
-          article.content = md.render(article.content)
-          return {
-            article: article,
-            comments: [],
-            comment: '',
-            sendComment: false,
-            limit: 5,
-            count: 0,
-            page: 1,
-            pages: 1
-          }
-        } else {
-          console.error("文章详情请求错误：", res)
-        }
-      }).catch((e) => {
-        error({statusCode: 404, message: 'Article not found'})
-      })
-    },*/
+    /*    asyncData ({params, error, store, query}) {
+     return axios.get('/api/article', {
+     params: {item: params.articleid}
+     }).then(res => {
+     if (res.data.success) {
+     store.commit('SET_MENU_NAME', res.data.articles[0].articleClass.name || '')
+     store.commit('setArticle', res.data.articles[0] || '')
+     let article = res.data.articles[0]
+     article.content = md.render(article.content)
+     return {
+     article: article,
+     comments: [],
+     comment: '',
+     sendComment: false,
+     limit: 5,
+     count: 0,
+     page: 1,
+     pages: 1
+     }
+     } else {
+     console.error("文章详情请求错误：", res)
+     }
+     }).catch((e) => {
+     error({statusCode: 404, message: 'Article not found'})
+     })
+     },*/
     created() {
       this.getList(1, false)
       this.$store.commit('SET_MENU_NAME', '留言')
@@ -223,6 +223,10 @@
       },
       /*添加评论*/
       addComment () {
+        if (!this.user) {
+          this.$router.push({name: 'index-login', query: {'retpath': this.$route.fullPath}})
+          return
+        }
         if (this.comment === '') {
           alert('内容不能为空')
           return
@@ -241,6 +245,10 @@
       },
       /*子评论添加*/
       addSonComment (item) {
+        if (!this.user) {
+          this.$router.push({name: 'index-login', query: {'retpath': this.$route.fullPath}})
+          return
+        }
         if (item.comment === '') {
           alert('内容不能为空')
           return
