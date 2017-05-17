@@ -28,6 +28,7 @@
     methods: {
       signup (event, form) {
         event.preventDefault()
+        if (!this.verify(form.email.value, form.name.value, form.password.value)) return
         let body = {
           email: form.email.value,
           name: form.name.value,
@@ -43,6 +44,30 @@
             alert(res.errors)
           }
         })
+      },
+      verify (email, name, password) {
+        let str = null
+        const myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        if (!myreg.test(email)) {
+          str = "邮箱格式错误！"
+        } else if (name === '') {
+          str = "用户名不能为空！"
+        } else if (password === '') {
+          str = "密码不能为空！"
+        } else if (name.length > 8) {
+          str = "用户名不得长于8位！"
+        } else if (name.trim() !== name) {
+          str = "用户名不能含有空格！"
+        } else if (password.length > 30) {
+          str = "密码不得长于30位！"
+        } else if (password.trim() !== password) {
+          str = "密码不能含有空格"
+        }
+        if (str) {
+          alert(str)
+          return false;
+        }
+        return true;
       }
     }
   }

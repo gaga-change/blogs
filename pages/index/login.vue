@@ -23,6 +23,7 @@
     methods: {
       signin (event, form) {
         event.preventDefault()
+        if (!this.verify(form.email.value, form.password.value)) return
         let body = {
           email: form.email.value,
           password: form.password.value
@@ -36,8 +37,19 @@
             this.$router.replace({path: '/'})
           } else {
             console.log(res)
+            alert('用户名或密码错误!')
           }
         })
+      },
+      verify (email, password) {
+        let str = null
+        if (email === '') str = '邮箱不能为空！'
+        else if (password === '') str = '密码不能为空！'
+        if (str) {
+          alert(str)
+          return false
+        }
+        return true
       }
     }
   }
