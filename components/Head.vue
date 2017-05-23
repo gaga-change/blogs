@@ -41,7 +41,7 @@
             <li><router-link :to="{name: 'index-message'}">留言</router-link></li>
             <!--<li><a href="#">留言板</a></li>-->
             <li v-if="user && user.isMaster">
-              <nuxt-link to="/control/home">控制中心</nuxt-link>
+              <nuxt-link to="/control/articlemenu">控制中心</nuxt-link>
             </li>
             <li class="log-li" v-if="!user">
               <nuxt-link :to="{name: 'index-login'}" class="log">登入</nuxt-link>
